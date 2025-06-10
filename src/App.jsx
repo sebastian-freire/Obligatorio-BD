@@ -1,5 +1,5 @@
 import Clientes from "./pages/Clientes";
-import LogIn from "./pages/LogIn";
+import LogIn from "./pages/LogIn/LogIn";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
