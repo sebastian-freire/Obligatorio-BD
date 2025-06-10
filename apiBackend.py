@@ -28,7 +28,7 @@ def obtener_clientes():
 
 @app.route("/clientes", methods=["POST"])
 def agregar_cliente():
-    data = request.json
+    data = request.json()
     id = data.get("id") 
     nombre = data.get("nombre")
     telefono = data.get("telefono")
