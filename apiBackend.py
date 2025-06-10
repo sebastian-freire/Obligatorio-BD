@@ -50,4 +50,4 @@ def agregar_cliente():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
