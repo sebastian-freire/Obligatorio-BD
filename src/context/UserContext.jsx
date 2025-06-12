@@ -4,7 +4,6 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
 
 	const getCurrentUser = () => {
 		if(!user) {
@@ -26,7 +25,7 @@ export const UserProvider = ({ children }) => {
 	}
 
     return (
-        <UserContext.Provider value={{ getCurrentUser, setCurrentUser , isAdmin }}>
+        <UserContext.Provider value={{ getCurrentUser, setCurrentUser }}>
             {children}
         </UserContext.Provider>
     );

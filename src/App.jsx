@@ -2,6 +2,9 @@
 import './App.css'
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx"
+import Clientes from './pages/Clientes/Clientes.jsx';
+import AgregarCliente from './pages/Clientes/AgregarClientes.jsx';
+import MenuPage from './pages/MenuPage/MenuPage.jsx';
 import { UserProvider } from './context/userContext.jsx';
 
 function App() {
@@ -12,6 +15,11 @@ function App() {
       <Routes>
         <Route path="/*" element={<Navigate replace to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/clientes" element={<Clientes />} />
+        <Route path="/menu" element={<MenuPage />} />
+        <Route path="/clientes/agregar" element={<AgregarCliente />} />
+        <Route path="/clientes/editar/:idCliente" element={<AgregarCliente />} />
+
       </Routes>
     </UserProvider>
   );
