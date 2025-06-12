@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx"
 import Clientes from './pages/Clientes/Clientes.jsx';
 import AgregarCliente from './pages/Clientes/AgregarClientes.jsx';
+import EditarCliente from './pages/Clientes/EditarCliente.jsx';
 import MenuPage from './pages/MenuPage/MenuPage.jsx';
 import { UserProvider } from './context/userContext.jsx';
 
@@ -18,7 +19,7 @@ function App() {
         <Route path="/clientes" element={<Clientes />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/clientes/agregar" element={<AgregarCliente />} />
-        <Route path="/clientes/editar/:idCliente" element={<AgregarCliente />} />
+        <Route path="/clientes/editar/:idCliente" element={<EditarCliente />} />
 
       </Routes>
     </UserProvider>

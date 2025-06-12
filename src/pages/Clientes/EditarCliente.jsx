@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function AgregarCliente() {
+export default function EditarCliente() {
     const [cliente, setCliente] = useState(null);
+    const params = useParams();
     constnavigate = useNavigate();
 
     useEffect(() => {

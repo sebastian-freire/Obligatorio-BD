@@ -5,8 +5,8 @@ import "./LoginPage.css";
 
 function LoginPage() {
     const navigate = useNavigate();
-    const usuarioActual = useRef(null);
-    const contraseña = useRef(null);
+    const usuarioActual = useRef("");
+    const contraseña = useRef("");
     const { setCurrentUser } = useUser();
     const [UsuarioIncorrecto, setUsuarioIncorrecto] = useState(false);
 
@@ -42,7 +42,7 @@ function LoginPage() {
             <input type="text" name="usuario" placeholder="Correo electrónico" ref={usuarioActual} />
             <input type="text" name="contraseña" placeholder="Contraseña" ref={usuarioActual} />
             {UsuarioIncorrecto && <p className="error-message">Usuario o contraseña incorrectos</p>}
-            <button type="submit" onClick={logIn} disabled={!usuarioActual.current.value.trim() || !contraseña.current.value.trim()}>
+            <button type="submit" onClick={logIn}>
                 Ingresar
             </button>
         </div>
