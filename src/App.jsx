@@ -7,6 +7,7 @@ import MenuPage from "./pages/MenuPage/MenuPage.jsx";
 import { UserProvider } from "./context/userContext.jsx";
 import EditarCliente from "./pages/Clientes/EditarCliente.jsx";
 
+
 function App() {
   //const currentUser = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
@@ -19,6 +20,7 @@ function App() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/clientes/agregar" element={<AgregarCliente />} />
         <Route path="/clientes/editar/:idCliente" element={<EditarCliente />} />
+
       </Routes>
     </UserProvider>
   );

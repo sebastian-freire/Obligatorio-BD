@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-
 import useFetch from "./Fetchs";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
 
 export default function EditarCliente() {
   const params = useParams();
