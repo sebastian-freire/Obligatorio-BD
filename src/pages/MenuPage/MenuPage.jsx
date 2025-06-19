@@ -1,7 +1,7 @@
 import { useUser } from "../../context/userContext";
 
 export default function MenuPage() {
-    const { getCurrentUser } = useUser
+    const { getCurrentUser } = useUser();
 
     return (
         <div className="menu-container">

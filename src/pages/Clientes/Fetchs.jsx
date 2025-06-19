@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 export default function useFetch() {
+  const apiUrl = import.meta.env.API_ENDPOINT;
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -10,7 +11,7 @@ export default function useFetch() {
 
   const fetchCliente = async (id) => {
     try {
-      const url = `http://127.0.0.1:5000/clientes/${id}`;
+      const url = `${apiUrl}/clientes/${id}`;
       const res = await fetch(url);
       const data = await res.json();
       return data;
@@ -21,7 +22,7 @@ export default function useFetch() {
 
   const agregarCliente = async (nombre, telefono, correo) => {
     try {
-      const res = await fetch("http://127.0.0.1:5000/clientes", {
+      const res = await fetch(`${apiUrl}/clientes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -41,7 +42,7 @@ export default function useFetch() {
 
   const editarCliente = async (id, nombre, telefono, correo) => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/clientes/${id}`, {
+      const res = await fetch(`${apiUrl}/clientes/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json"

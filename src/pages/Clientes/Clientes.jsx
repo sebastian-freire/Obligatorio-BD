@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import "./Clientes.css";
 
 function Clientes() {
+  const apiUrl = import.meta.env.VITE_API_ENDPOINT;
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/clientes")
+    fetch(`${apiUrl}/clientes`)
       .then((res) => res.json())
       .then((data) => {
         setClientes(data);
+        console.log(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -21,6 +23,7 @@ function Clientes() {
       {loading ? (
         <p>Cargando...</p>
       ) : (
+        clien
         <table border="1" cellPadding="8">
           <thead>
             <tr>

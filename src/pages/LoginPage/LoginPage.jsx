@@ -1,14 +1,14 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "/src/context/UserContext.jsx";
+import useFetch from "./Fetchs";
 import "./LoginPage.css";
 
 function LoginPage() {
-    const navigate = useNavigate();
     const usuarioActual = useRef("");
     const contraseña = useRef("");
-    const { setCurrentUser } = useUser();
-    const [UsuarioIncorrecto, setUsuarioIncorrecto] = useState(false);
+
+    const { fetchUsuario, logIn, UsuarioIncorrecto, cerrar } = useFetch();
     
 
 
@@ -18,8 +18,15 @@ function LoginPage() {
             <input type="text" name="usuario" placeholder="Correo electrónico" ref={usuarioActual} />
             <input type="text" name="contraseña" placeholder="Contraseña" ref={contraseña} />
             {UsuarioIncorrecto && <p className="error-message">Usuario o contraseña incorrectos</p>}
-            <button type="submit" onClick={logIn} >
+            <button type="submit" onClick={(e) => {
+                e.preventDefault();
+                logIn(usuarioActual.current.value, contraseña.current.value)}} >
                 Ingresar
+            </button>
+            <button type="submit" onClick={(e) => {
+                e.preventDefault();
+                cerrar()}} >
+                Cerrar sesión
             </button>
         </div>
     );
