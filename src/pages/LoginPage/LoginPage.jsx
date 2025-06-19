@@ -5,8 +5,8 @@ import "./LoginPage.css";
 
 function LoginPage() {
     const navigate = useNavigate();
-    const usuarioActual = useRef(null);
-    const contraseña = useRef(null);
+    const usuarioActual = useRef("");
+    const contraseña = useRef("");
     const { setCurrentUser } = useUser();
     const [UsuarioIncorrecto, setUsuarioIncorrecto] = useState(false);
     
