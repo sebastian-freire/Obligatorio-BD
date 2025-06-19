@@ -15,6 +15,20 @@ def obtener_direcciones():
         return jsonify(direcciones)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Obtener todas las direcciones de un cliente específico
+@direcciones_bp.route("/direcciones/<int:id_cliente>", methods=["GET"])
+def obtener_direcciones_cliente(id_cliente):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM direcciones WHERE id_cliente = %s", (id_cliente,))
+        direcciones = cursor.fetchall() 
+        conn.close()
+        return jsonify(direcciones)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 # Crear una nueva dirección
 @direcciones_bp.route("/direcciones", methods=["POST"])
