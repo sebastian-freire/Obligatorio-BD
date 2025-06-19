@@ -23,7 +23,6 @@ function Clientes() {
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        clien
         <table border="1" cellPadding="8">
           <thead>
             <tr>
