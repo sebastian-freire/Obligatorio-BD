@@ -15,15 +15,16 @@ def obtener_mantenimientos():
 @mantenimientos_bp.route("/mantenimientos", methods=["POST"])
 def crear_mantenimiento():
     data = request.json
-    descripcion = data.get("descripcion")
+    id_maquina = data.get("id_maquina")
+    ci_tecnico = data.get("ci_tecnico")
+    tipo = data.get("tipo")
     fecha = data.get("fecha")
-    maquina_id = data.get("maquina_id")
-    tecnico_id = data.get("tecnico_id")
+    observaciones = data.get("observaciones")
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO mantenimientos (descripcion, fecha, maquina_id, tecnico_id) VALUES (%s, %s, %s, %s)",
-        (descripcion, fecha, maquina_id, tecnico_id)
+        "INSERT INTO mantenimientos (id_maquina, ci_tecnico, tipo, fecha, observaciones) VALUES (%s, %s, %s, %s, %s)",
+        (id_maquina, ci_tecnico, tipo, fecha, observaciones)
     )
     conn.commit()
     conn.close()
@@ -34,18 +35,21 @@ def modificar_mantenimiento(id):
     data = request.json
     campos = []
     valores = []
-    if "descripcion" in data:
-        campos.append("descripcion=%s")
-        valores.append(data["descripcion"])
+    if "id_maquina" in data:
+        campos.append("id_maquina=%s")
+        valores.append(data["id_maquina"])
+    if "ci_tecnico" in data:
+        campos.append("ci_tecnico=%s")
+        valores.append(data["ci_tecnico"])
+    if "tipo" in data:
+        campos.append("tipo=%s")
+        valores.append(data["tipo"])
     if "fecha" in data:
         campos.append("fecha=%s")
         valores.append(data["fecha"])
-    if "maquina_id" in data:
-        campos.append("maquina_id=%s")
-        valores.append(data["maquina_id"])
-    if "tecnico_id" in data:
-        campos.append("tecnico_id=%s")
-        valores.append(data["tecnico_id"])
+    if "observaciones" in data:
+        campos.append("observaciones=%s")
+        valores.append(data["observaciones"])
     if not campos:
         return jsonify({"mensaje": "No se enviaron campos para actualizar"}), 400
     valores.append(id)

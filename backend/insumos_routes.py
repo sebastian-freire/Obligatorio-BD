@@ -15,14 +15,15 @@ def obtener_insumos():
 @insumos_bp.route("/insumos", methods=["POST"])
 def crear_insumo():
     data = request.json
-    nombre = data.get("nombre")
-    cantidad = data.get("cantidad")
-    proveedor_id = data.get("proveedor_id")
+    descripcion = data.get("descripcion")
+    tipo = data.get("tipo")
+    precio_unitario = data.get("precio_unitario")
+    id_proveedor = data.get("id_proveedor")
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO insumos (nombre, cantidad, proveedor_id) VALUES (%s, %s, %s)",
-        (nombre, cantidad, proveedor_id)
+        "INSERT INTO insumos (descripcion, tipo, precio_unitario, id_proveedor) VALUES (%s, %s, %s, %s)",
+        (descripcion, tipo, precio_unitario, id_proveedor)
     )
     conn.commit()
     conn.close()
@@ -33,15 +34,18 @@ def modificar_insumo(id):
     data = request.json
     campos = []
     valores = []
-    if "nombre" in data:
-        campos.append("nombre=%s")
-        valores.append(data["nombre"])
-    if "cantidad" in data:
-        campos.append("cantidad=%s")
-        valores.append(data["cantidad"])
-    if "proveedor_id" in data:
-        campos.append("proveedor_id=%s")
-        valores.append(data["proveedor_id"])
+    if "descripcion" in data:
+        campos.append("descripcion=%s")
+        valores.append(data["descripcion"])
+    if "tipo" in data:
+        campos.append("tipo=%s")
+        valores.append(data["tipo"])
+    if "precio_unitario" in data:
+        campos.append("precio_unitario=%s")
+        valores.append(data["precio_unitario"])
+    if "id_proveedor" in data:
+        campos.append("id_proveedor=%s")
+        valores.append(data["id_proveedor"])
     if not campos:
         return jsonify({"mensaje": "No se enviaron campos para actualizar"}), 400
     valores.append(id)

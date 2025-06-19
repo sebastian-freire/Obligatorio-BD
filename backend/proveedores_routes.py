@@ -18,13 +18,12 @@ def obtener_proveedores():
 def crear_proveedor():
     data = request.json
     nombre = data.get("nombre")
-    telefono = data.get("telefono")
-    correo = data.get("correo")
+    contacto = data.get("contacto")
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO proveedores (nombre, telefono, correo) VALUES (%s, %s, %s)",
-        (nombre, telefono, correo)
+        "INSERT INTO proveedores (nombre, contacto) VALUES (%s, %s)",
+        (nombre, contacto)
     )
     conn.commit()
     conn.close()
@@ -39,12 +38,9 @@ def modificar_proveedor(id):
     if "nombre" in data:
         campos.append("nombre=%s")
         valores.append(data["nombre"])
-    if "telefono" in data:
-        campos.append("telefono=%s")
-        valores.append(data["telefono"])
-    if "correo" in data:
-        campos.append("correo=%s")
-        valores.append(data["correo"])
+    if "contacto" in data:
+        campos.append("contacto=%s")
+        valores.append(data["contacto"])
     if not campos:
         return jsonify({"mensaje": "No se enviaron campos para actualizar"}), 400
     valores.append(id)

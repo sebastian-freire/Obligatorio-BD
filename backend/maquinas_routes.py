@@ -16,13 +16,14 @@ def obtener_maquinas():
 def crear_maquina():
     data = request.json
     modelo = data.get("modelo")
-    serie = data.get("serie")
-    cliente_id = data.get("cliente_id")
+    id_cliente = data.get("id_cliente")
+    ubicacion_cliente = data.get("ubicacion_cliente")
+    costo_alquiler_mensual = data.get("costo_alquiler_mensual")
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO maquinas (modelo, serie, cliente_id) VALUES (%s, %s, %s)",
-        (modelo, serie, cliente_id)
+        "INSERT INTO maquinas (modelo, id_cliente, ubicacion_cliente, costo_alquiler_mensual) VALUES (%s, %s, %s, %s)",
+        (modelo, id_cliente, ubicacion_cliente, costo_alquiler_mensual)
     )
     conn.commit()
     conn.close()
@@ -36,12 +37,15 @@ def modificar_maquina(id):
     if "modelo" in data:
         campos.append("modelo=%s")
         valores.append(data["modelo"])
-    if "serie" in data:
-        campos.append("serie=%s")
-        valores.append(data["serie"])
-    if "cliente_id" in data:
-        campos.append("cliente_id=%s")
-        valores.append(data["cliente_id"])
+    if "id_cliente" in data:
+        campos.append("id_cliente=%s")
+        valores.append(data["id_cliente"])
+    if "ubicacion_cliente" in data:
+        campos.append("ubicacion_cliente=%s")
+        valores.append(data["ubicacion_cliente"])
+    if "costo_alquiler_mensual" in data:
+        campos.append("costo_alquiler_mensual=%s")
+        valores.append(data["costo_alquiler_mensual"])
     if not campos:
         return jsonify({"mensaje": "No se enviaron campos para actualizar"}), 400
     valores.append(id)

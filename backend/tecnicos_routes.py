@@ -15,33 +15,38 @@ def obtener_tecnicos():
 @tecnicos_bp.route("/tecnicos", methods=["POST"])
 def crear_tecnico():
     data = request.json
+    ci = data.get("ci")
     nombre = data.get("nombre")
-    especialidad = data.get("especialidad")
+    apellido = data.get("apellido")
+    telefono = data.get("telefono")
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO tecnicos (nombre, especialidad) VALUES (%s, %s)",
-        (nombre, especialidad)
+        "INSERT INTO tecnicos (ci, nombre, apellido, telefono) VALUES (%s, %s, %s, %s)",
+        (ci, nombre, apellido, telefono)
     )
     conn.commit()
     conn.close()
     return jsonify({"mensaje": "Técnico creado"}), 201
 
-@tecnicos_bp.route("/tecnicos/<int:id>", methods=["PATCH"])
-def modificar_tecnico(id):
+@tecnicos_bp.route("/tecnicos/<ci>", methods=["PATCH"])
+def modificar_tecnico(ci):
     data = request.json
     campos = []
     valores = []
     if "nombre" in data:
         campos.append("nombre=%s")
         valores.append(data["nombre"])
-    if "especialidad" in data:
-        campos.append("especialidad=%s")
-        valores.append(data["especialidad"])
+    if "apellido" in data:
+        campos.append("apellido=%s")
+        valores.append(data["apellido"])
+    if "telefono" in data:
+        campos.append("telefono=%s")
+        valores.append(data["telefono"])
     if not campos:
         return jsonify({"mensaje": "No se enviaron campos para actualizar"}), 400
-    valores.append(id)
-    query = f"UPDATE tecnicos SET {', '.join(campos)} WHERE id=%s"
+    valores.append(ci)
+    query = f"UPDATE tecnicos SET {', '.join(campos)} WHERE ci=%s"
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(query, valores)
@@ -49,11 +54,11 @@ def modificar_tecnico(id):
     conn.close()
     return jsonify({"mensaje": "Técnico modificado"}), 200
 
-@tecnicos_bp.route("/tecnicos/<int:id>", methods=["DELETE"])
-def eliminar_tecnico(id):
+@tecnicos_bp.route("/tecnicos/<ci>", methods=["DELETE"])
+def eliminar_tecnico(ci):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM tecnicos WHERE id = %s", (id,))
+    cursor.execute("DELETE FROM tecnicos WHERE ci = %s", (ci,))
     conn.commit()
     conn.close()
     return jsonify({"mensaje": "Técnico eliminado"}), 200
