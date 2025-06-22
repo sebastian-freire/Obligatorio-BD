@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from auth import require_admin
 
 tecnicos_bp = Blueprint('tecnicos', __name__)
 
 @tecnicos_bp.route("/tecnicos", methods=["GET"])
+@require_admin
 def obtener_tecnicos():
     try:
         conn = get_connection()
@@ -16,6 +18,7 @@ def obtener_tecnicos():
         return jsonify({"error": str(e)}), 500
 
 @tecnicos_bp.route("/tecnicos", methods=["POST"])
+@require_admin
 def crear_tecnico():
     try:
         data = request.json
@@ -36,6 +39,7 @@ def crear_tecnico():
         return jsonify({"error": str(e)}), 500
 
 @tecnicos_bp.route("/tecnicos/<ci>", methods=["PATCH"])
+@require_admin
 def modificar_tecnico(ci):
     try:
         data = request.json
@@ -64,6 +68,7 @@ def modificar_tecnico(ci):
         return jsonify({"error": str(e)}), 500
 
 @tecnicos_bp.route("/tecnicos/<ci>", methods=["DELETE"])
+@require_admin
 def eliminar_tecnico(ci):
     try:
         conn = get_connection()

@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from auth import require_admin
 
 proveedores_bp = Blueprint('proveedores', __name__)
 
 # Traer todos los proveedores
 @proveedores_bp.route("/proveedores", methods=["GET"])
+@require_admin
 def obtener_proveedores():
     try:
         conn = get_connection()
@@ -18,6 +20,7 @@ def obtener_proveedores():
 
 # Crear un nuevo proveedor
 @proveedores_bp.route("/proveedores", methods=["POST"])
+@require_admin
 def crear_proveedor():
     try:
         data = request.json
@@ -37,6 +40,7 @@ def crear_proveedor():
 
 # Modificar un proveedor
 @proveedores_bp.route("/proveedores/<int:id>", methods=["PATCH"])
+@require_admin
 def modificar_proveedor(id):
     try:
         data = request.json
@@ -63,6 +67,7 @@ def modificar_proveedor(id):
 
 # Eliminar un proveedor
 @proveedores_bp.route("/proveedores/<int:id>", methods=["DELETE"])
+@require_admin
 def eliminar_proveedor(id):
     try:
         conn = get_connection()
