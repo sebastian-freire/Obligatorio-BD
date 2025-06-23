@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from auth import require_admin 
 
 maquinas_bp = Blueprint('maquinas', __name__)
 
@@ -16,6 +17,7 @@ def obtener_maquinas():
         return jsonify({"error": str(e)}), 500
 
 @maquinas_bp.route("/maquinas", methods=["POST"])
+@require_admin
 def crear_maquina():
     try:
         data = request.json
@@ -36,6 +38,7 @@ def crear_maquina():
         return jsonify({"error": str(e)}), 500
 
 @maquinas_bp.route("/maquinas/<int:id>", methods=["PATCH"])
+@require_admin
 def modificar_maquina(id):
     try:
         data = request.json
@@ -67,6 +70,7 @@ def modificar_maquina(id):
         return jsonify({"error": str(e)}), 500
 
 @maquinas_bp.route("/maquinas/<int:id>", methods=["DELETE"])
+@require_admin
 def eliminar_maquina(id):
     try:
         conn = get_connection()
