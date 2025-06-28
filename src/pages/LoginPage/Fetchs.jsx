@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "/src/context/UserContext.jsx";
 
 export default function useFetch() {
-  const apiUrl = import.meta.env.API_ENDPOINT;
+  const apiUrl = import.meta.env.VITE_API_ENDPOINT;
   const [UsuarioIncorrecto, setUsuarioIncorrecto] = useState(false);
   const { setCurrentUser } = useUser();
   const navigate = useNavigate();

@@ -12,7 +12,7 @@ def cobro_mensual_cliente():
         cursor.execute('''
             SELECT 
                 maquinas.id_cliente, 
-                SUM((registro_consumo.cantidad_usada * insumos.precio_unitario) + maquinas.costo_alquiler_mensual) AS total_mensual
+                SUM(registro_consumo.cantidad_usada * insumos.precio_unitario) AS cuenta_insumos, SUM(maquinas.costo_alquiler_mensual) AS cuanta_alquiler,
             FROM maquinas
             JOIN registro_consumo ON maquinas.id = registro_consumo.id_maquina
             JOIN insumos ON registro_consumo.id_insumo = insumos.id

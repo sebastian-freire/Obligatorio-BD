@@ -1,28 +1,27 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import useClientes from "../../hooks/UseClientes";
+import useMantenimientos from "../../hooks/UseMantenimientos";
 import "../../styles/sharedStyles.css";
 
-function Clientes() {
+function Mantenimientos() {
   const apiUrl = import.meta.env.VITE_API_ENDPOINT;
   const navigate = useNavigate();
-  const [clientes, setClientes] = useState([]);
+  const [mantenimientos, setMantenimientos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(null);
-  const { eliminarCliente } = useClientes();
+  const { fetchMantenimientos, eliminarMantenimiento } = useMantenimientos();
 
-
-  const cargarClientes = async () => {
-    setLoading(true);
-    const res = await fetch(`${apiUrl}/clientes`);
-    const data = await res.json();
-    setClientes(data);
-    setLoading(false);
-  };
+  const cargarMantenimientos = async () => {
+    fetchMantenimientos()
+      .then((data) => {
+        setMantenimientos(data);
+        setLoading(false);
+      })
+  }
 
   useEffect(() => {
-    cargarClientes();
+    cargarMantenimientos()
   }, []);
 
   return (
@@ -32,30 +31,29 @@ function Clientes() {
       ) : (
         <div className="show-container">
           <div className="header">
-            <h1>Clientes</h1>
-            <button onClick={() => window.location.href = "/clientes/agregar"}>
-              Agregar Cliente
+            <h1>Mantenimientos</h1>
+            <button onClick={() => window.location.href = "/mantenimientos/agregar"}>
+              Agregar Mantenimiento
             </button>
           </div>
           <table className="show-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Correo</th>
-                <th>Dirección</th>
-                <th></th>
+                <th>Fecha</th>
+                <th>ID Máquina</th>
+                <th>C.I. técnico</th>
+                <th>Tipo</th>
+                <th>Observaciones</th>
               </tr>
             </thead>
             <tbody>
-              {clientes.map((cliente, index) => (
-                <tr key={cliente.id}>
-                  <td>{cliente.id}</td>
-                  <td>{cliente.nombre}</td>
-                  <td>{cliente.telefono}</td>
-                  <td>{cliente.correo}</td>
-                  <td>{cliente.direccion}</td>
+              {mantenimientos.map((mantenimiento, index) => (
+                <tr key={mantenimiento.id}>
+                  <td>{mantenimiento.fecha}</td>
+                  <td>{mantenimiento.id_maquina}</td>
+                  <td>{mantenimiento.ci_tecnico}</td>
+                  <td>{mantenimiento.tipo}</td>
+                  <td>{mantenimiento.observaciones}</td>
                   <td style={{ position: "relative" }}>
                     <div className="dropdown">
                       <button
@@ -68,9 +66,7 @@ function Clientes() {
                         <div className="dropdown-content">
                           <button
                             className="dropdown-item"
-                            onClick={() =>
-                              navigate(`/clientes/editar/${cliente.id}`)
-                            }
+                            onClick={() => navigate(`/mantenimientos/editar/${mantenimiento.id}`)}
                           >
                             Editar
                           </button>
@@ -81,19 +77,18 @@ function Clientes() {
                               toast.custom((t) => {
                                 return (
                                   <div key={t.id} className="toast-custom">
-                                    <p>¿Estás seguro de eliminar este cliente?</p>
+                                    <p>¿Estás seguro de eliminar este mantenimiento?</p>
                                     <div className="toast-buttons">
                                       <button className="cancel-button" onClick={() => toast.dismiss(t.id)}>Cancelar</button>
                                       <button className="delete-button" onClick={() => {
                                         toast.remove(t.id);
-                                        eliminarCliente(cliente.id).then((data) => {
-                                          cargarClientes();
+                                        eliminarMantenimiento(mantenimiento.id).then((data) => {
+                                          cargarMantenimientos();
                                           if (data) {
-                                            toast.success("Maquina eliminado correctamente", {
-                                              duration: 2000,
-                                            });
-                                          }
-                                        })
+                                          toast.success("Mantenimiento eliminado correctamente", {
+                                            duration: 2000,
+                                          });}
+                                        });
                                       }}>Eliminar</button>
                                     </div>
                                   </div>
@@ -102,14 +97,6 @@ function Clientes() {
                             }}
                           >
                             Eliminar
-                          </button>
-                          <button
-                            className="dropdown-item"
-                            onClick={() =>
-                              navigate(`/clientes/alquilerMensual/${cliente.id}`, { state: { nombre: cliente.nombre } })
-                            }
-                          >
-                            Alquiler mensual
                           </button>
                         </div>
                       )}
@@ -120,10 +107,9 @@ function Clientes() {
             </tbody>
           </table>
         </div>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 }
 
-export default Clientes;
+export default Mantenimientos;

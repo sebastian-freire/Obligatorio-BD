@@ -1,55 +1,93 @@
-import useFetch from "./Fetchs";
+import toast from "react-hot-toast";
+import useClientes from "../../hooks/UseClientes";
+import { useState } from "react";
 
 export default function AgregarCliente() {
+  const [nuevoCliente, setNuevoCliente] = useState({
+    nombre: "",
+    telefono: "",
+    correo: "",
+    direccion: ""
+  });
   const {
-    nombre,
-    setNombre,
-    correo,
-    setCorreo,
-    telefono,
-    setTelefono,
     agregarCliente
-  } = useFetch();
+  } = useClientes();
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setNuevoCliente((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   return (
     <div className="agregar-cliente-container">
       <h1>Agregar Cliente</h1>
       <input
         type="text"
-        value={nombre}
+        value={nuevoCliente.nombre}
         placeholder="Nombre"
         name="nombre"
-        onChange={(event) => {
-          setNombre(event.target.value);
+        maxLength={50}
+        style={{
+          borderColor: '#e74c3c',
+          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
+          borderRadius: '2px'
         }}
+        onChange={handleChange}
       />
       <br />
       <input
         type="tel"
-        value={telefono}
+        value={nuevoCliente.telefono}
         placeholder="Teléfono"
         name="telefono"
-        onChange={(event) => {
-          setTelefono(event.target.value);
+        maxLength={20}
+        style={{
+          borderColor: '#e74c3c',
+          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
+          borderRadius: '2px'
         }}
+        onChange={handleChange}
       />
       <br />
       <input
         type="email"
-        value={correo}
+        value={nuevoCliente.correo}
         placeholder="Correo"
         name="correo"
-        onChange={(event) => {
-          setCorreo(event.target.value);
+        maxLength={50}
+        style={{
+          borderColor: '#e74c3c',
+          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
+          borderRadius: '2px'
         }}
+        onChange={handleChange}
+      />
+      <br />
+      <input
+        type="direction"
+        value={nuevoCliente.direccion}
+        placeholder="Dirección"
+        name="direccion"
+        maxLength={50}
+        style={{
+          borderColor: '#e74c3c',
+          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
+          borderRadius: '2px'
+        }}
+        onChange={handleChange}
       />
       <br />
       <button
         onClick={() => {
-          agregarCliente(nombre, telefono, correo);
-          setNombre("");
-          setTelefono("");
-          setCorreo("");
+          if (nuevoCliente.nombre.trim() === "" || nuevoCliente.telefono.trim() === "" || nuevoCliente.correo.trim() === "" || nuevoCliente.direccion.trim() === "") {
+            toast.error("Por favor, complete todos los campos obligatorios.");
+            return;
+          }
+          console.log(nuevoCliente);
+          agregarCliente(nuevoCliente);
         }}
       >
         Agregar Cliente

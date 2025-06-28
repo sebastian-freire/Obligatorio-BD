@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
 				setUser(storedUser);
 				return storedUser;
 			} else {
-				return undefined;
+				return {nombre: "Invitado", id: 0};
 			}
 		} else {	
 			return user;

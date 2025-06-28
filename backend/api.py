@@ -6,7 +6,6 @@ from insumos_routes import insumos_bp
 from maquinas_routes import maquinas_bp
 from tecnicos_routes import tecnicos_bp
 from mantenimientos_routes import mantenimientos_bp
-from direcciones_routes import direcciones_bp
 from login_routes import login_bp
 from consultas_reportes_routes import consultas_reportes_bp
 
@@ -20,7 +19,6 @@ app.register_blueprint(maquinas_bp)
 app.register_blueprint(tecnicos_bp)
 app.register_blueprint(mantenimientos_bp)
 app.register_blueprint(consultas_reportes_bp)
-app.register_blueprint(direcciones_bp)
 app.register_blueprint(login_bp)
 
 if __name__ == "__main__":

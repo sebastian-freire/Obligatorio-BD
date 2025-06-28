@@ -37,11 +37,12 @@ def agregar_cliente():
         nombre = data.get("nombre")
         telefono = data.get("telefono")
         correo = data.get("correo")
+        direccion = data.get("direccion")
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO clientes (nombre, telefono, correo) VALUES (%s, %s, %s)",
-            (nombre, telefono, correo)
+            "INSERT INTO clientes (nombre, telefono, correo, direccion) VALUES (%s, %s, %s, %s)",
+            (nombre, telefono, correo, direccion)
         )
         conn.commit()
         conn.close()
@@ -52,28 +53,34 @@ def agregar_cliente():
 # Modificar un cliente existente
 @clientes_bp.route("/clientes/<int:id>", methods=["PATCH"])
 def modificar_cliente(id):
-    data = request.json
-    campos = []
-    valores = []
-    if "nombre" in data:
-        campos.append("nombre=%s")
-        valores.append(data["nombre"])
-    if "telefono" in data:
-        campos.append("telefono=%s")
-        valores.append(data["telefono"])
-    if "correo" in data:
-        campos.append("correo=%s")
-        valores.append(data["correo"])
-    if not campos:
-        return jsonify({"mensaje": "No se enviaron campos para actualizar"}), 400
-    valores.append(id)
-    query = f"UPDATE clientes SET {', '.join(campos)} WHERE id=%s"
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute(query, valores)
-    conn.commit()
-    conn.close()
-    return jsonify({"mensaje": "Cliente modificado"}), 200
+    try:
+        data = request.json
+        campos = []
+        valores = []
+        if "nombre" in data:
+            campos.append("nombre=%s")
+            valores.append(data["nombre"])
+        if "telefono" in data:
+            campos.append("telefono=%s")
+            valores.append(data["telefono"])
+        if "correo" in data:
+            campos.append("correo=%s")
+            valores.append(data["correo"])
+        if "direccion" in data:
+            campos.append("direccion=%s")
+            valores.append(data["direccion"])
+        if not campos:
+            return jsonify({"mensaje": "No se enviaron campos para actualizar"}), 400
+        valores.append(id)
+        query = f"UPDATE clientes SET {', '.join(campos)} WHERE id=%s"
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, valores)
+        conn.commit()
+        conn.close()
+        return jsonify({"mensaje": "Cliente modificado"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Eliminar un cliente
 @clientes_bp.route("/clientes/<int:id>", methods=["DELETE"])

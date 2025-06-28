@@ -1,47 +1,41 @@
 import { useEffect, useState } from "react";
-import useClientes from "../../hooks/UseClientes";
+import useMaquinas from "../../hooks/UseMaquinas";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 
-export default function EditarCliente() {
+export default function EditarMaquina() {
   const params = useParams();
-  const navigate = useNavigate();
-  const [cliente, setCliente] = useState({});
+  const [maquina, setMaquina] = useState({});
 
   const {
-    fetchCliente,
-    editarCliente
-  } = useClientes();
+    editarMaquina,
+    fetchMaquinaById
+  } = useMaquinas();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setCliente((prevState) => ({
+    setMaquina((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
   useEffect(() => {
-    console.log(typeof(params.idCliente));
-    fetchCliente(params.idCliente).then((data) => {
-      if (data) {
-        console.log(data);
-        setCliente(data);
-      } else {
-        navigate(-1);
-      }
-    });
-  }, [params.idCliente]);
+    fetchMaquinaById(params.idMaquina)
+      .then((data) => {
+        setMaquina(data);
+      })
+  }, [params.idMaquina]);
 
   return (
     <div className="agregar-cliente-container">
-      <h1>Editar Cliente</h1>
+      <h1>Editar Maquina</h1>
       <input
         type="text"
-        placeholder="Nombre"
-        name="nombre"
-        value={cliente.nombre}
+        placeholder="Modelo"
+        name="modelo"
+        value={maquina.modelo}
         maxLength={50}
         style={{
           borderColor: '#e74c3c',
@@ -52,11 +46,10 @@ export default function EditarCliente() {
       />
       <br />
       <input
-        type="tel"
-        placeholder="Teléfono"
-        value={cliente.telefono}
-        name="telefono"
-        maxLength={20}
+        type="number"
+        placeholder="Id Cliente"
+        value={maquina.id_cliente}
+        name="id_cliente"
         style={{
           borderColor: '#e74c3c',
           boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
@@ -66,10 +59,10 @@ export default function EditarCliente() {
       />
       <br />
       <input
-        type="email"
-        placeholder="Correo"
-        value={cliente.correo}
-        name="correo"
+        type="text"
+        placeholder="Ubicación en el cliente"
+        value={maquina.ubicacion_maquina}
+        name="ubicacion_maquina"
         maxLength={50}
         style={{
           borderColor: '#e74c3c',
@@ -80,10 +73,10 @@ export default function EditarCliente() {
       />
       <br />
       <input
-        type="direction"
-        value={cliente.direccion}
-        placeholder="Dirección"
-        name="direccion"
+        type="number"
+        value={maquina.costo_alquiler_mensual}
+        placeholder="Costo alquiler mensual"
+        name="costo_alquiler_mensual"
         maxLength={50}
         style={{
           borderColor: '#e74c3c',
@@ -93,7 +86,7 @@ export default function EditarCliente() {
         onChange={handleChange}
       />
       <br />
-      <button onClick={() => editarCliente(params.idCliente, cliente)}>Editar Cliente</button>
+      <button onClick={() => editarMaquina(maquina)}>Editar Maquina</button>
     </div>
   );
 }
