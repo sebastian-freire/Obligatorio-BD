@@ -12,10 +12,14 @@ def cobro_mensual_cliente():
         cursor.execute('''
             SELECT 
                 maquinas.id_cliente, 
-                SUM(registro_consumo.cantidad_usada * insumos.precio_unitario) AS cuenta_insumos, SUM(maquinas.costo_alquiler_mensual) AS cuanta_alquiler,
+                SUM(registro_consumo.cantidad_usada * insumos.precio_unitario) AS cuenta_insumos, 
+                SUM(maquinas.costo_alquiler_mensual) AS cuenta_alquiler,
+                SUM((registro_consumo.cantidad_usada * insumos.precio_unitario) + maquinas.costo_alquiler_mensual) AS total_mensual
             FROM maquinas
             JOIN registro_consumo ON maquinas.id = registro_consumo.id_maquina
             JOIN insumos ON registro_consumo.id_insumo = insumos.id
+            WHERE MONTH(registro_consumo.fecha) = MONTH(CURDATE()) 
+                AND YEAR(registro_consumo.fecha) = YEAR(CURDATE())
             GROUP BY maquinas.id_cliente
         ''')
         clientes = cursor.fetchall()
@@ -31,10 +35,11 @@ def insumos_costo_total():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute('''
-            SELECT insumos.id, descripcion, SUM(cantidad_usada * precio_unitario) AS costoTotal
+            SELECT insumos.id, descripcion, SUM(cantidad_usada) AS cantidadTotal, precio_unitario,
+                SUM(cantidad_usada * precio_unitario) AS costoTotal
             FROM insumos
             JOIN registro_consumo ON insumos.id = registro_consumo.id_insumo
-            GROUP BY insumos.id, descripcion
+            GROUP BY insumos.id, descripcion, precio_unitario
             ORDER BY costoTotal DESC LIMIT   4;
         ''')
         insumos = cursor.fetchall()
@@ -42,27 +47,8 @@ def insumos_costo_total():
         return jsonify(insumos)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
-# Cantidad de insumos usados por cliente
-@consultas_reportes_bp.route("/insumos_cantidad_total", methods=["GET"])
-def insumos_cantidad_total():
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute('''
-            SELECT insumos.id, descripcion, SUM(cantidad_usada) AS cantidadTotal
-            FROM insumos
-            JOIN registro_consumo ON insumos.id = registro_consumo.id_insumo
-            GROUP BY insumos.id, descripcion
-            ORDER BY cantidadTotal DESC LIMIT 4;
-        ''')
-        insumos = cursor.fetchall()
-        conn.close()
-        return jsonify(insumos)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
-# Tecnnicos con más mantenimientos
+
+# Tecnicos con más mantenimientos
 @consultas_reportes_bp.route("/tecnicos_mas_mantenimientos", methods=["GET"])
 def tecnicos_mas_mantenimientos():
     try:
