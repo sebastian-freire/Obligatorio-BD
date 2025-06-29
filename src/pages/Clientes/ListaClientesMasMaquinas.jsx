@@ -19,41 +19,39 @@ function ListaClientesMasMaquinas() {
   }, []);
 
   return (
-    <div>
+    <div className="show-container">
+      <div className="header">
+        <h1>Clientes - más máquinas</h1>
+      </div>
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        <div className="show-container">
-          <div className="header">
-            <h1>Clientes con Más Máquinas</h1>
-          </div>
-          <table className="show-table">
-            <thead>
-              <tr>
-                <th>ID Cliente</th>
-                <th>Nombre</th>
-                <th>Total Máquinas</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clientesMaquinas.length > 0 ? (
-                clientesMaquinas.map((cliente) => (
-                  <tr key={cliente.id}>
-                    <td>{cliente.id}</td>
-                    <td>{cliente.nombre}</td>
-                    <td>{cliente.total_maquinas}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3" style={{ textAlign: "center" }}>
-                    No hay datos disponibles
-                  </td>
+        <table className="show-table">
+          <thead>
+            <tr>
+              <th>ID Cliente</th>
+              <th>Nombre</th>
+              <th>Total Máquinas</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clientesMaquinas.length > 0 ? (
+              clientesMaquinas.map((cliente) => (
+                <tr key={cliente.id}>
+                  <td>{cliente.id}</td>
+                  <td>{cliente.nombre}</td>
+                  <td>{cliente.total_maquinas}</td>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3" style={{ textAlign: "center" }}>
+                  No hay datos disponibles
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       )}
     </div>
   );

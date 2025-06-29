@@ -42,114 +42,112 @@ function ListaClientes({ onAgregarClick, onEditarClick }) {
   };
 
   return (
-    <div>
+    <div className="show-container">
+      <div className="header">
+        <h1>Clientes</h1>
+        <div>
+          <button onClick={onAgregarClick}>Agregar Cliente</button>
+        </div>
+      </div>
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        <div className="show-container">
-          <div className="header">
-            <h1>Clientes</h1>
-            <div>
-              <button onClick={onAgregarClick}>Agregar Cliente</button>
-            </div>
-          </div>
-          <table className="show-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Correo</th>
-                <th>Dirección</th>
-                <th>✏️</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clientes.map((cliente, index) => (
-                <tr key={cliente.id}>
-                  <td>{cliente.id}</td>
-                  <td>{cliente.nombre}</td>
-                  <td>{cliente.telefono}</td>
-                  <td>{cliente.correo}</td>
-                  <td>{cliente.direccion}</td>
-                  <td style={{ position: "relative" }}>
-                    <div className="dropdown">
-                      <button
-                        className="dots-button"
-                        onClick={(e) => handleDropdownClick(e, index)}
-                      >
-                        ⋮
-                      </button>
-                      {open === index && (
-                        <div className="dropdown-content">
-                          <button
-                            className="dropdown-item"
-                            onClick={() => {
-                              setOpen(null);
-                              if (onEditarClick) onEditarClick(cliente.id);
-                            }}
-                          >
-                            Editar
-                          </button>
-                          <button
-                            className="dropdown-item"
-                            onClick={() => {
-                              setOpen(null);
-                              toast.custom(
-                                (t) => {
-                                  return (
-                                    <div key={t.id} className="toast-custom">
-                                      <p>
-                                        ¿Estás seguro de eliminar este cliente?
-                                      </p>
-                                      <div className="toast-buttons">
-                                        <button
-                                          className="cancel-button"
-                                          onClick={() => toast.dismiss(t.id)}
-                                        >
-                                          Cancelar
-                                        </button>
-                                        <button
-                                          className="delete-button"
-                                          onClick={() => {
-                                            toast.remove(t.id);
-                                            eliminarCliente(cliente.id).then(
-                                              (data) => {
-                                                cargarClientes();
-                                                if (data) {
-                                                  const successToast =
-                                                    toast.success(
-                                                      "Cliente eliminado correctamente"
-                                                    );
-                                                  setTimeout(() => {
-                                                    toast.dismiss(successToast);
-                                                  }, 2000);
-                                                }
+        <table className="show-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Correo</th>
+              <th>Dirección</th>
+              <th>✏️</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clientes.map((cliente, index) => (
+              <tr key={cliente.id}>
+                <td>{cliente.id}</td>
+                <td>{cliente.nombre}</td>
+                <td>{cliente.telefono}</td>
+                <td>{cliente.correo}</td>
+                <td>{cliente.direccion}</td>
+                <td style={{ position: "relative" }}>
+                  <div className="dropdown">
+                    <button
+                      className="dots-button"
+                      onClick={(e) => handleDropdownClick(e, index)}
+                    >
+                      ⋮
+                    </button>
+                    {open === index && (
+                      <div className="dropdown-content">
+                        <button
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            if (onEditarClick) onEditarClick(cliente.id);
+                          }}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            toast.custom(
+                              (t) => {
+                                return (
+                                  <div key={t.id} className="toast-custom">
+                                    <p>
+                                      ¿Estás seguro de eliminar este cliente?
+                                    </p>
+                                    <div className="toast-buttons">
+                                      <button
+                                        className="cancel-button"
+                                        onClick={() => toast.dismiss(t.id)}
+                                      >
+                                        Cancelar
+                                      </button>
+                                      <button
+                                        className="delete-button"
+                                        onClick={() => {
+                                          toast.remove(t.id);
+                                          eliminarCliente(cliente.id).then(
+                                            (data) => {
+                                              cargarClientes();
+                                              if (data) {
+                                                const successToast =
+                                                  toast.success(
+                                                    "Cliente eliminado correctamente"
+                                                  );
+                                                setTimeout(() => {
+                                                  toast.dismiss(successToast);
+                                                }, 2000);
                                               }
-                                            );
-                                          }}
-                                        >
-                                          Eliminar
-                                        </button>
-                                      </div>
+                                            }
+                                          );
+                                        }}
+                                      >
+                                        Eliminar
+                                      </button>
                                     </div>
-                                  );
-                                },
-                                { duration: Infinity }
-                              );
-                            }}
-                          >
-                            Eliminar
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                                  </div>
+                                );
+                              },
+                              { duration: Infinity }
+                            );
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

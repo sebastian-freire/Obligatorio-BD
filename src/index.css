@@ -45,6 +45,7 @@ body {
   padding: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-y: scroll;
   background: linear-gradient(
     135deg,
     var(--light-pink) 0%,

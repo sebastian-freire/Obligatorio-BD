@@ -34,6 +34,22 @@ export default function useConsultasReportes() {
     }
   };
 
+  // Obtener costo total de insumos (top 4 más costosos)
+  const fetchInsumosCantidadTotal = async () => {
+    try {
+      const url = `${apiUrl}/insumos_cantidad_total`;
+      const res = await fetch(url);
+      if (!res.ok)
+        throw new Error("Error al obtener cantidad total de insumos");
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Failed to fetch insumos cantidad total:", err);
+      toast.error("Error al cargar cantidad total de insumos");
+      return [];
+    }
+  };
+
   // Obtener técnicos con más mantenimientos (top 4)
   const fetchTecnicosMasMantenimientos = async () => {
     try {
@@ -104,6 +120,7 @@ export default function useConsultasReportes() {
     fetchInsumosCostoTotal,
     fetchTecnicosMasMantenimientos,
     fetchClientesMasMaquinas,
-    fetchTodosLosReportes
+    fetchTodosLosReportes,
+    fetchInsumosCantidadTotal
   };
 }

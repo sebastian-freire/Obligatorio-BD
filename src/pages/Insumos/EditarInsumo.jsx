@@ -56,7 +56,6 @@ export default function EditarInsumo({ insumoId, onCancel }) {
             maxLength={50}
             onChange={handleChange}
           />
-          <br />
           <input
             type="text"
             placeholder="Tipo"
@@ -65,7 +64,6 @@ export default function EditarInsumo({ insumoId, onCancel }) {
             maxLength={50}
             onChange={handleChange}
           />
-          <br />
           <input
             type="number"
             placeholder="Precio Unitario"
@@ -74,7 +72,6 @@ export default function EditarInsumo({ insumoId, onCancel }) {
             step="0.01"
             onChange={handleChange}
           />
-          <br />
           <input
             type="number"
             placeholder="ID Proveedor"
@@ -82,18 +79,19 @@ export default function EditarInsumo({ insumoId, onCancel }) {
             name="id_proveedor"
             onChange={handleChange}
           />
-          <br />
-          <button
-            onClick={() => {
-              editarInsumo(insumoId, insumo);
-              if (onCancel) onCancel();
-            }}
-          >
-            Editar Insumo
-          </button>
-          <button onClick={onCancel} className="cancel-button">
-            Cancelar
-          </button>
+          <div className="form-buttons">
+            <button
+              onClick={() => {
+                editarInsumo(insumoId, insumo);
+                if (onCancel) onCancel();
+              }}
+            >
+              Editar Insumo
+            </button>
+            <button onClick={onCancel} className="cancel-button">
+              Cancelar
+            </button>
+          </div>
         </>
       )}
     </div>

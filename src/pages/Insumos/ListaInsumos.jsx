@@ -39,114 +39,112 @@ function ListaInsumos({ onAgregarClick, onEditarClick }) {
   };
 
   return (
-    <div>
+    <div className="show-container">
+      <div className="header">
+        <h1>Insumos</h1>
+        <div>
+          <button onClick={onAgregarClick}>Agregar Insumo</button>
+        </div>
+      </div>
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        <div className="show-container">
-          <div className="header">
-            <h1>Insumos</h1>
-            <div>
-              <button onClick={onAgregarClick}>Agregar Insumo</button>
-            </div>
-          </div>
-          <table className="show-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Descripción</th>
-                <th>Tipo</th>
-                <th>Precio Unitario</th>
-                <th>ID Proveedor</th>
-                <th>✏️</th>
-              </tr>
-            </thead>
-            <tbody>
-              {insumos.map((insumo, index) => (
-                <tr key={insumo.id}>
-                  <td>{insumo.id}</td>
-                  <td>{insumo.descripcion}</td>
-                  <td>{insumo.tipo}</td>
-                  <td>${insumo.precio_unitario}</td>
-                  <td>{insumo.id_proveedor}</td>
-                  <td>
-                    <div className="dropdown">
-                      <button
-                        className="dots-button"
-                        onClick={(e) => handleDropdownClick(e, index)}
-                      >
-                        ⋮
-                      </button>
-                      {open === index && (
-                        <div className="dropdown-content">
-                          <button
-                            className="dropdown-item"
-                            onClick={() => {
-                              setOpen(null);
-                              onEditarClick(insumo.id);
-                            }}
-                          >
-                            Editar
-                          </button>
-                          <button
-                            className="dropdown-item"
-                            onClick={() => {
-                              setOpen(null);
-                              toast.custom(
-                                (t) => {
-                                  return (
-                                    <div key={t.id} className="toast-custom">
-                                      <p>
-                                        ¿Estás seguro de eliminar este insumo?
-                                      </p>
-                                      <div className="toast-buttons">
-                                        <button
-                                          className="cancel-button"
-                                          onClick={() => toast.dismiss(t.id)}
-                                        >
-                                          Cancelar
-                                        </button>
-                                        <button
-                                          className="delete-button"
-                                          onClick={() => {
-                                            toast.remove(t.id);
-                                            eliminarInsumo(insumo.id).then(
-                                              (data) => {
-                                                cargarInsumos();
-                                                if (data) {
-                                                  const successToast =
-                                                    toast.success(
-                                                      "Insumo eliminado correctamente"
-                                                    );
-                                                  setTimeout(() => {
-                                                    toast.dismiss(successToast);
-                                                  }, 2000);
-                                                }
+        <table className="show-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Descripción</th>
+              <th>Tipo</th>
+              <th>Precio Unitario</th>
+              <th>ID Proveedor</th>
+              <th>✏️</th>
+            </tr>
+          </thead>
+          <tbody>
+            {insumos.map((insumo, index) => (
+              <tr key={insumo.id}>
+                <td>{insumo.id}</td>
+                <td>{insumo.descripcion}</td>
+                <td>{insumo.tipo}</td>
+                <td>${insumo.precio_unitario}</td>
+                <td>{insumo.id_proveedor}</td>
+                <td>
+                  <div className="dropdown">
+                    <button
+                      className="dots-button"
+                      onClick={(e) => handleDropdownClick(e, index)}
+                    >
+                      ⋮
+                    </button>
+                    {open === index && (
+                      <div className="dropdown-content">
+                        <button
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            onEditarClick(insumo.id);
+                          }}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            toast.custom(
+                              (t) => {
+                                return (
+                                  <div key={t.id} className="toast-custom">
+                                    <p>
+                                      ¿Estás seguro de eliminar este insumo?
+                                    </p>
+                                    <div className="toast-buttons">
+                                      <button
+                                        className="cancel-button"
+                                        onClick={() => toast.dismiss(t.id)}
+                                      >
+                                        Cancelar
+                                      </button>
+                                      <button
+                                        className="delete-button"
+                                        onClick={() => {
+                                          toast.remove(t.id);
+                                          eliminarInsumo(insumo.id).then(
+                                            (data) => {
+                                              cargarInsumos();
+                                              if (data) {
+                                                const successToast =
+                                                  toast.success(
+                                                    "Insumo eliminado correctamente"
+                                                  );
+                                                setTimeout(() => {
+                                                  toast.dismiss(successToast);
+                                                }, 2000);
                                               }
-                                            );
-                                          }}
-                                        >
-                                          Eliminar
-                                        </button>
-                                      </div>
+                                            }
+                                          );
+                                        }}
+                                      >
+                                        Eliminar
+                                      </button>
                                     </div>
-                                  );
-                                },
-                                { duration: Infinity }
-                              );
-                            }}
-                          >
-                            Eliminar
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                                  </div>
+                                );
+                              },
+                              { duration: Infinity }
+                            );
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

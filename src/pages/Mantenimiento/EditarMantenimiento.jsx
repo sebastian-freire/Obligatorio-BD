@@ -86,7 +86,6 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
             name="fecha"
             onChange={handleChange}
           />
-          <br />
           <input
             type="number"
             value={mantenimiento.id_maquina || ""}
@@ -94,7 +93,6 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
             name="id_maquina"
             onChange={handleChange}
           />
-          <br />
           <input
             type="text"
             value={mantenimiento.ci_tecnico || ""}
@@ -102,7 +100,6 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
             name="ci_tecnico"
             onChange={handleChange}
           />
-          <br />
           <input
             type="text"
             value={mantenimiento.tipo || ""}
@@ -110,7 +107,6 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
             name="tipo"
             onChange={handleChange}
           />
-          <br />
           <input
             type="text"
             value={mantenimiento.observaciones || ""}
@@ -118,25 +114,26 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
             name="observaciones"
             onChange={handleChange}
           />
-          <br />
-          <button
-            onClick={() => {
-              // Convertir fecha de vuelta al formato esperado por el servidor
-              const fechaFormateada =
-                mantenimiento.fecha.replace("T", " ") + ":00";
-              const mantenimientoParaEnviar = {
-                ...mantenimiento,
-                fecha: fechaFormateada
-              };
-              editarMantenimiento(mantenimientoId, mantenimientoParaEnviar);
-              if (onCancel) onCancel();
-            }}
-          >
-            Editar Mantenimiento
-          </button>
-          <button onClick={onCancel} className="cancel-button">
-            Cancelar
-          </button>
+          <div className="form-buttons">
+            <button
+              onClick={() => {
+                // Convertir fecha de vuelta al formato esperado por el servidor
+                const fechaFormateada =
+                  mantenimiento.fecha.replace("T", " ") + ":00";
+                const mantenimientoParaEnviar = {
+                  ...mantenimiento,
+                  fecha: fechaFormateada
+                };
+                editarMantenimiento(mantenimientoId, mantenimientoParaEnviar);
+                if (onCancel) onCancel();
+              }}
+            >
+              Editar Mantenimiento
+            </button>
+            <button onClick={onCancel} className="cancel-button">
+              Cancelar
+            </button>
+          </div>
         </>
       )}
     </div>

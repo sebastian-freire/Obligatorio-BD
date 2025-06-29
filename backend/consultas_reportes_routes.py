@@ -28,7 +28,7 @@ def cobro_mensual_cliente():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-# Costo de insumos usados por cliente
+# Costo de insumos mas usados
 @consultas_reportes_bp.route("/insumos_costo_total", methods=["GET"])
 def insumos_costo_total():
     try:
@@ -41,6 +41,26 @@ def insumos_costo_total():
             JOIN registro_consumo ON insumos.id = registro_consumo.id_insumo
             GROUP BY insumos.id, descripcion, precio_unitario
             ORDER BY costoTotal DESC LIMIT   4;
+        ''')
+        insumos = cursor.fetchall()
+        conn.close()
+        return jsonify(insumos)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+# Costo de insumos mas usados POR CANTIDAD
+@consultas_reportes_bp.route("/insumos_cantidad_total", methods=["GET"])
+def insumos_cantidad_total():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('''
+            SELECT insumos.id, descripcion, SUM(cantidad_usada) AS cantidadTotal, precio_unitario,
+                SUM(cantidad_usada * precio_unitario) AS costoTotal
+            FROM insumos
+            JOIN registro_consumo ON insumos.id = registro_consumo.id_insumo
+            GROUP BY insumos.id, descripcion, precio_unitario
+            ORDER BY cantidadTotal DESC LIMIT   4;
         ''')
         insumos = cursor.fetchall()
         conn.close()

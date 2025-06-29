@@ -33,7 +33,6 @@ export default function AgregarMantenimientos({ onCancel }) {
         name="fecha"
         onChange={handleChange}
       />
-      <br />
       {/* 2. Use type="number" for numeric input */}
       <input
         type="number"
@@ -42,7 +41,6 @@ export default function AgregarMantenimientos({ onCancel }) {
         name="id_maquina"
         onChange={handleChange}
       />
-      <br />
       <input
         type="text"
         value={mantenimiento.ci_tecnico}
@@ -50,7 +48,6 @@ export default function AgregarMantenimientos({ onCancel }) {
         name="ci_tecnico"
         onChange={handleChange}
       />
-      <br />
       <input
         type="text"
         value={mantenimiento.tipo}
@@ -58,7 +55,6 @@ export default function AgregarMantenimientos({ onCancel }) {
         name="tipo"
         onChange={handleChange}
       />
-      <br />
       <input
         type="text"
         value={mantenimiento.observaciones}
@@ -66,22 +62,24 @@ export default function AgregarMantenimientos({ onCancel }) {
         name="observaciones"
         onChange={handleChange}
       />
-      <button
-        onClick={() => {
-          agregarMantenimiento({
-            ...mantenimiento,
-            id_maquina: Number(mantenimiento.id_maquina),
-            fecha: mantenimiento.fecha.replace("T", " ") + ":00"
-          });
-          // Después de agregar exitosamente, volver a la lista
-          if (onCancel) onCancel();
-        }}
-      >
-        Agregar Mantenimiento
-      </button>
-      <button onClick={onCancel} className="cancel-button">
-        Cancelar
-      </button>
+      <div className="form-buttons">
+        <button
+          onClick={() => {
+            agregarMantenimiento({
+              ...mantenimiento,
+              id_maquina: Number(mantenimiento.id_maquina),
+              fecha: mantenimiento.fecha.replace("T", " ") + ":00"
+            });
+            // Después de agregar exitosamente, volver a la lista
+            if (onCancel) onCancel();
+          }}
+        >
+          Agregar Mantenimiento
+        </button>
+        <button onClick={onCancel} className="cancel-button">
+          Cancelar
+        </button>
+      </div>
     </div>
   );
 }

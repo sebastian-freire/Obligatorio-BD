@@ -61,9 +61,8 @@
 .show-table th:not(:last-child),
 .show-table td:not(:last-child) {
   max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .show-table th {
@@ -293,7 +292,7 @@
 
 /* Estilos para MenuPage */
 .menu-container {
-  max-width: 800px;
+  width: 100vw;
   margin: 0 auto;
   padding: 48px 32px;
   min-height: 100vh;

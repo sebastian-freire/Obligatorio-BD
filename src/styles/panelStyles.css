@@ -1,4 +1,14 @@
-/* Estilos para componentes con pestañas y headers fijos - Tema rosado pastel */
+/* Estilos para componentes con pestañas y headers fijos - T.tabs-wrapper::after {
+  content: "";
+  position: absolute;
+  border-radius: 1.5px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--secondary-pink);
+  z-index: 1;
+}pastel */
 
 /* Contenedor principal */
 .panel-container {
@@ -40,8 +50,7 @@
 
 /* Contenedor de pestañas */
 .tabs-container {
-  margin-bottom: 24px;
-  height: 60px;
+  height: 50px;
   overflow: hidden;
   max-width: 1200px;
   margin-left: auto;
@@ -49,9 +58,9 @@
 }
 
 .tabs-wrapper {
+  height: 50px;
   display: flex;
   gap: 4px;
-  height: 58px;
   align-items: flex-end;
   padding: 0 24px;
   box-sizing: border-box;
@@ -65,7 +74,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: var(--secondary-pink);
   z-index: 1;
 }
@@ -126,7 +135,7 @@
   max-width: 1200px;
   margin: 0 auto;
   background: var(--surface);
-  border-radius: 16px;
+  border-radius: 0 0 16px 16px;
   box-shadow: 0 8px 32px var(--shadow);
   border: 1px solid var(--border);
   padding: 24px;

@@ -30,7 +30,6 @@ export default function AgregarInsumo({ onCancel }) {
         maxLength={50}
         onChange={handleChange}
       />
-      <br />
       <input
         type="text"
         value={nuevoInsumo.tipo}
@@ -39,7 +38,6 @@ export default function AgregarInsumo({ onCancel }) {
         maxLength={50}
         onChange={handleChange}
       />
-      <br />
       <input
         type="number"
         value={nuevoInsumo.precio_unitario}
@@ -48,7 +46,6 @@ export default function AgregarInsumo({ onCancel }) {
         step="0.01"
         onChange={handleChange}
       />
-      <br />
       <input
         type="number"
         value={nuevoInsumo.id_proveedor}
@@ -56,28 +53,29 @@ export default function AgregarInsumo({ onCancel }) {
         name="id_proveedor"
         onChange={handleChange}
       />
-      <br />
-      <button
-        onClick={() => {
-          if (
-            !nuevoInsumo.descripcion ||
-            !nuevoInsumo.tipo ||
-            !nuevoInsumo.precio_unitario ||
-            !nuevoInsumo.id_proveedor
-          ) {
-            toast.error("Por favor, complete todos los campos.");
-            return;
-          }
-          agregarInsumo(nuevoInsumo);
-          // Después de agregar exitosamente, volver a la lista
-          if (onCancel) onCancel();
-        }}
-      >
-        Agregar Insumo
-      </button>
-      <button onClick={onCancel} className="cancel-button">
-        Cancelar
-      </button>
+      <div className="form-buttons">
+        <button
+          onClick={() => {
+            if (
+              !nuevoInsumo.descripcion ||
+              !nuevoInsumo.tipo ||
+              !nuevoInsumo.precio_unitario ||
+              !nuevoInsumo.id_proveedor
+            ) {
+              toast.error("Por favor, complete todos los campos.");
+              return;
+            }
+            agregarInsumo(nuevoInsumo);
+            // Después de agregar exitosamente, volver a la lista
+            if (onCancel) onCancel();
+          }}
+        >
+          Agregar Insumo
+        </button>
+        <button onClick={onCancel} className="cancel-button">
+          Cancelar
+        </button>
+      </div>
     </div>
   );
 }
