@@ -1,32 +1,59 @@
 import { useEffect, useState } from "react";
 import useMaquinas from "../../hooks/UseMaquinas";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import "../../styles/sharedStyles.css";
 
+export default function EditarMaquina({ maquinaId, onCancel }) {
+  const [maquina, setMaquina] = useState({
+    modelo: "",
+    id_cliente: "",
+    ubicacion_maquina: "",
+    costo_alquiler_mensual: ""
+  });
 
-export default function EditarMaquina() {
-  const params = useParams();
-  const [maquina, setMaquina] = useState({});
-
-  const {
-    editarMaquina,
-    fetchMaquinaById
-  } = useMaquinas();
+  const { editarMaquina, fetchMaquinaById } = useMaquinas();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setMaquina((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
   useEffect(() => {
-    fetchMaquinaById(params.idMaquina)
-      .then((data) => {
-        setMaquina(data);
-      })
-  }, [params.idMaquina]);
+    if (maquinaId) {
+      fetchMaquinaById(maquinaId)
+        .then((data) => {
+          if (data) {
+            setMaquina(data);
+          } else {
+            toast.error("Error al cargar los datos de la máquina");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error al cargar los datos de la máquina");
+        });
+    }
+  }, [maquinaId, fetchMaquinaById]);
+
+  const handleEditar = async () => {
+    if (
+      !maquina.modelo ||
+      !maquina.id_cliente ||
+      !maquina.ubicacion_maquina ||
+      !maquina.costo_alquiler_mensual
+    ) {
+      toast.error("Por favor, complete todos los campos obligatorios.");
+      return;
+    }
+
+    const resultado = await editarMaquina(maquinaId, maquina);
+    if (resultado) {
+      if (onCancel) onCancel();
+    }
+  };
 
   return (
     <div className="agregar-cliente-container">
@@ -35,58 +62,38 @@ export default function EditarMaquina() {
         type="text"
         placeholder="Modelo"
         name="modelo"
-        value={maquina.modelo}
+        value={maquina.modelo || ""}
         maxLength={50}
-        style={{
-          borderColor: '#e74c3c',
-          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
-          borderRadius: '2px'
-        }}
         onChange={handleChange}
       />
-      <br />
       <input
         type="number"
         placeholder="Id Cliente"
-        value={maquina.id_cliente}
+        value={maquina.id_cliente || ""}
         name="id_cliente"
-        style={{
-          borderColor: '#e74c3c',
-          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
-          borderRadius: '2px'
-        }}
         onChange={handleChange}
       />
-      <br />
       <input
         type="text"
         placeholder="Ubicación en el cliente"
-        value={maquina.ubicacion_maquina}
+        value={maquina.ubicacion_maquina || ""}
         name="ubicacion_maquina"
         maxLength={50}
-        style={{
-          borderColor: '#e74c3c',
-          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
-          borderRadius: '2px'
-        }}
         onChange={handleChange}
       />
-      <br />
       <input
         type="number"
-        value={maquina.costo_alquiler_mensual}
+        value={maquina.costo_alquiler_mensual || ""}
         placeholder="Costo alquiler mensual"
         name="costo_alquiler_mensual"
-        maxLength={50}
-        style={{
-          borderColor: '#e74c3c',
-          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
-          borderRadius: '2px'
-        }}
         onChange={handleChange}
       />
-      <br />
-      <button onClick={() => editarMaquina(maquina)}>Editar Maquina</button>
+      <div className="form-buttons">
+        <button onClick={handleEditar}>Editar Maquina</button>
+        <button onClick={onCancel} className="cancel-button">
+          Cancelar
+        </button>
+      </div>
     </div>
   );
 }

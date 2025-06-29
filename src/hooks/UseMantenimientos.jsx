@@ -27,6 +27,11 @@ export default function useMantenimientos() {
 
   const agregarMantenimiento = async (nuevoMantenimiento) => {
     try {
+      // Convertir fecha a formato ISO ajustado a la zona horaria
+      // Sin esto manda las cosas a la base de datos con 3 horas menos
+      const fecha = new Date(nuevoMantenimiento.fecha);
+      const fechaAjustada = fecha.toISOString().slice(0, 19).replace("T", " ");
+
       const res = await fetch(`${apiUrl}/mantenimientos`, {
         method: "POST",
         headers: {
@@ -36,7 +41,7 @@ export default function useMantenimientos() {
           id_maquina: nuevoMantenimiento.id_maquina,
           ci_tecnico: nuevoMantenimiento.ci_tecnico,
           tipo: nuevoMantenimiento.tipo,
-          fecha: nuevoMantenimiento.fecha,
+          fecha: fechaAjustada,
           observaciones: nuevoMantenimiento.observaciones
         })
       });
@@ -50,6 +55,9 @@ export default function useMantenimientos() {
 
   const editarMantenimiento = async (id, mantenimiento) => {
     try {
+      const fecha = new Date(mantenimiento.fecha);
+      const fechaAjustada = fecha.toISOString().slice(0, 19).replace("T", " ");
+
       const res = await fetch(`${apiUrl}/mantenimientos/${id}`, {
         method: "PATCH",
         headers: {
@@ -59,7 +67,7 @@ export default function useMantenimientos() {
           id_maquina: mantenimiento.id_maquina,
           ci_tecnico: mantenimiento.ci_tecnico,
           tipo: mantenimiento.tipo,
-          fecha: mantenimiento.fecha,
+          fecha: fechaAjustada,
           observaciones: mantenimiento.observaciones
         })
       });

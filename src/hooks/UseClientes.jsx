@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function useClientes() {
@@ -14,7 +13,6 @@ export default function useClientes() {
       console.error("Failed to fetch:", err);
     }
   };
-
 
   //lo uso?
   const cargarClientes = async () => {

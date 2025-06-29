@@ -50,25 +50,20 @@ function Proveedores() {
   return (
     <div className="panel-container">
       <div className="panel-header">
-        <h1 className="panel-title">Panel de Proveedores</h1>
-        <div className="panel-menu-button">
-          <MenuButton />
-        </div>
+        <h1>Proveedores</h1>
+        <MenuButton />
       </div>
 
-      <div className="tabs-container">
-        <div className="tabs-wrapper">
-          <button
-            onClick={() => setPestañaActiva("lista")}
-            className={`tab-button ${
-              pestañaActiva === "lista" ? "active" : ""
-            }`}
-          >
-            Lista de Proveedores
-          </button>
-        </div>
+      <div className="panel-tabs">
+        <button
+          className={`tab ${pestañaActiva === "lista" ? "active" : ""}`}
+          onClick={() => setPestañaActiva("lista")}
+        >
+          Lista de Proveedores
+        </button>
       </div>
-      <div className="content-container">{renderContenido()}</div>
+
+      <div className="panel-content">{renderContenido()}</div>
     </div>
   );
 }

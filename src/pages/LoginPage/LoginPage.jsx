@@ -1,35 +1,75 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "/src/context/UserContext.jsx";
-import useFetch from "./Fetchs";
+import { useUser } from "../../context/UserContext.jsx";
 import "./LoginPage.css";
 
 function LoginPage() {
-    const usuarioActual = useRef("");
-    const contraseña = useRef("");
+  const usuarioActual = useRef("");
+  const contraseña = useRef("");
+  const [UsuarioIncorrecto, setUsuarioIncorrecto] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    const { fetchUsuario, logIn, UsuarioIncorrecto, cerrar } = useFetch();
-    
+  const { login, logout } = useUser();
+  const navigate = useNavigate();
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setUsuarioIncorrecto(false);
 
-    return (
-        <div className="login-container">
-            <h2>Iniciar sesión</h2>
-            <input type="text" name="usuario" placeholder="Correo electrónico" ref={usuarioActual} />
-            <input type="text" name="contraseña" placeholder="Contraseña" ref={contraseña} />
-            {UsuarioIncorrecto && <p className="error-message">Usuario o contraseña incorrectos</p>}
-            <button type="submit" onClick={(e) => {
-                e.preventDefault();
-                logIn(usuarioActual.current.value, contraseña.current.value)}} >
-                Ingresar
-            </button>
-            <button type="submit" onClick={(e) => {
-                e.preventDefault();
-                cerrar()}} >
-                Cerrar sesión
-            </button>
-        </div>
-    );
+    const correo = usuarioActual.current.value;
+    const contrasena = contraseña.current.value;
+
+    if (!correo || !contrasena) {
+      setUsuarioIncorrecto(true);
+      setLoading(false);
+      return;
+    }
+
+    const success = await login(correo, contrasena);
+
+    if (success) {
+      navigate("/menu");
+    } else {
+      setUsuarioIncorrecto(true);
+    }
+
+    setLoading(false);
+  };
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logout();
+  };
+
+  return (
+    <div className="login-container">
+      <h2>Iniciar sesión</h2>
+      <input
+        type="email"
+        name="usuario"
+        placeholder="Correo electrónico"
+        ref={usuarioActual}
+        disabled={loading}
+      />
+      <input
+        type="password"
+        name="contraseña"
+        placeholder="Contraseña"
+        ref={contraseña}
+        disabled={loading}
+      />
+      {UsuarioIncorrecto && (
+        <p className="error-message">Usuario o contraseña incorrectos</p>
+      )}
+      <button type="submit" onClick={handleLogin} disabled={loading}>
+        {loading ? "Ingresando..." : "Ingresar"}
+      </button>
+      <button type="button" onClick={handleLogout} disabled={loading}>
+        Cerrar sesión
+      </button>
+    </div>
+  );
 }
 
 export default LoginPage;

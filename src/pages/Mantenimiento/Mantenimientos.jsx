@@ -58,6 +58,18 @@ function Mantenimientos() {
         </div>
       </div>
 
+      <div className="tabs-container">
+        <div className="tabs-wrapper">
+          <button
+            onClick={() => setPestañaActiva("lista")}
+            className={`tab-button ${
+              pestañaActiva === "lista" ? "active" : ""
+            }`}
+          >
+            Lista de Mantenimientos
+          </button>
+        </div>
+      </div>
       <div className="content-container">{renderContenido()}</div>
     </div>
   );

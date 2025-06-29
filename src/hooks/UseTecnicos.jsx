@@ -1,12 +1,16 @@
 import toast from "react-hot-toast";
+import { useUser } from "../context/UserContext";
 
 export default function useTecnicos() {
   const apiUrl = import.meta.env.VITE_API_ENDPOINT;
+  const { getAuthHeaders } = useUser();
 
   const fetchTecnicos = async () => {
     try {
       const url = `${apiUrl}/tecnicos`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       const data = await res.json();
       return data;
     } catch (err) {
@@ -17,7 +21,9 @@ export default function useTecnicos() {
   const fetchTecnico = async (ci) => {
     try {
       const url = `${apiUrl}/tecnicos/${ci}`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       const data = await res.json();
       return data;
     } catch (err) {
@@ -29,9 +35,7 @@ export default function useTecnicos() {
     try {
       const res = await fetch(`${apiUrl}/tecnicos`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           ci: tecnico.ci,
           nombre: tecnico.nombre,
@@ -51,9 +55,7 @@ export default function useTecnicos() {
     try {
       const res = await fetch(`${apiUrl}/tecnicos/${ci}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           ci: tecnico.ci,
           nombre: tecnico.nombre,
@@ -73,9 +75,7 @@ export default function useTecnicos() {
     try {
       const res = await fetch(`${apiUrl}/tecnicos/${ci}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        }
+        headers: getAuthHeaders()
       });
       if (!res.ok) throw new Error("Error al agregar post");
       return true;

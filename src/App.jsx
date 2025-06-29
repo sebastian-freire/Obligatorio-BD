@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import MenuPage from "./pages/MenuPage/MenuPage.jsx";
 import { Toaster } from "react-hot-toast";
-import { UserProvider } from "./context/userContext.jsx";
+import { UserProvider } from "./context/UserContext.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { Clientes, AgregarCliente, EditarCliente } from "./pages/Clientes";
 import { Maquinas, AgregarMaquina, EditarMaquina } from "./pages/Maquinas";
 import {
@@ -25,46 +26,124 @@ function App() {
       <Routes>
         <Route path="/*" element={<Navigate replace to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/menu" element={<MenuPage />} />
+
+        {/* Rutas protegidas */}
+        <Route
+          path="/menu"
+          element={
+            <ProtectedRoute>
+              <MenuPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Rutas Clientes */}
-        <Route path="/clientes" element={<Clientes />} />
-        <Route path="/clientes/agregar" element={<AgregarCliente />} />
-        <Route path="/clientes/editar/:idCliente" element={<EditarCliente />} />
-
-        {/* Rutas Máquinas */}
-        <Route path="/maquinas" element={<Maquinas />} />
-        <Route path="/maquinas/agregar" element={<AgregarMaquina />} />
-        <Route path="/maquinas/editar/:idMaquina" element={<EditarMaquina />} />
-
-        {/* Rutas Mantenimientos */}
-        <Route path="/mantenimientos" element={<Mantenimientos />} />
         <Route
-          path="/mantenimientos/agregar"
-          element={<AgregarMantenimientos />}
+          path="/clientes"
+          element={
+            <ProtectedRoute>
+              <Clientes />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Rutas Máquinas - Solo Administradores */}
+        <Route
+          path="/maquinas"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <Maquinas />
+            </ProtectedRoute>
+          }
         />
         <Route
-          path="/mantenimientos/editar/:idMantenimiento"
-          element={<EditarMantenimiento />}
+          path="/maquinas/agregar"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AgregarMaquina />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/maquinas/editar/:idMaquina"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <EditarMaquina />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Rutas Mantenimientos */}
+        <Route
+          path="/mantenimientos"
+          element={
+            <ProtectedRoute>
+              <Mantenimientos />
+            </ProtectedRoute>
+          }
         />
 
         {/* Rutas Proveedores */}
-        <Route path="/proveedores" element={<Proveedores />} />
-        <Route path="/proveedores/agregar" element={<AgregarProveedor />} />
+        <Route
+          path="/proveedores"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <Proveedores />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/proveedores/agregar"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AgregarProveedor />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/proveedores/editar/:idProveedor"
-          element={<EditarProveedor />}
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <EditarProveedor />
+            </ProtectedRoute>
+          }
         />
 
         {/* Rutas Insumos */}
-        <Route path="/insumos" element={<Insumos />} />
-        <Route path="/insumos/agregar" element={<AgregarInsumo />} />
-        <Route path="/insumos/editar/:idInsumo" element={<EditarInsumo />} />
+        <Route
+          path="/insumos"
+          element={
+            <ProtectedRoute>
+              <Insumos />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Rutas Técnicos */}
-        <Route path="/tecnicos" element={<Tecnicos />} />
-        <Route path="/tecnicos/agregar" element={<AgregarTecnico />} />
-        <Route path="/tecnicos/editar/:ciTecnico" element={<EditarTecnico />} />
+        {/* Rutas Técnicos - Solo Administradores */}
+        <Route
+          path="/tecnicos"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <Tecnicos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tecnicos/agregar"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AgregarTecnico />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tecnicos/editar/:ciTecnico"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <EditarTecnico />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
       <Toaster />
     </UserProvider>

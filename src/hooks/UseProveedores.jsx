@@ -1,12 +1,16 @@
 import toast from "react-hot-toast";
+import { useUser } from "../context/UserContext";
 
 export default function useProveedores() {
   const apiUrl = import.meta.env.VITE_API_ENDPOINT;
+  const { getAuthHeaders } = useUser();
 
   const fetchProveedores = async () => {
     try {
       const url = `${apiUrl}/proveedores`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       const data = await res.json();
       return data;
     } catch (err) {
@@ -17,7 +21,9 @@ export default function useProveedores() {
   const fetchProveedor = async (id) => {
     try {
       const url = `${apiUrl}/proveedores/${id}`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       const data = await res.json();
       return data;
     } catch (err) {
@@ -29,9 +35,7 @@ export default function useProveedores() {
     try {
       const res = await fetch(`${apiUrl}/proveedores`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           nombre: proveedor.nombre,
           telefono: proveedor.telefono,
@@ -51,9 +55,7 @@ export default function useProveedores() {
     try {
       const res = await fetch(`${apiUrl}/proveedores/${id}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           nombre: proveedor.nombre,
           telefono: proveedor.telefono,
@@ -73,9 +75,7 @@ export default function useProveedores() {
     try {
       const res = await fetch(`${apiUrl}/proveedores/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        }
+        headers: getAuthHeaders()
       });
       if (!res.ok) throw new Error("Error al agregar post");
       return true;
