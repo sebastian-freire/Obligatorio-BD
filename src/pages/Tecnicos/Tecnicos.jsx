@@ -32,7 +32,7 @@ export default function Tecnicos() {
                         <th>Nombre</th>
                         <th>Apellido</th>
                         <th>Teléfono</th>
-                        <th>Acciones</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>

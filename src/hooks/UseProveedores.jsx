@@ -62,8 +62,8 @@ export default function useProveedores() {
                     direccion: proveedor.direccion
                 })
             });
-            toast.success("Proveedor editado correctamente");
             if (!res.ok) throw new Error("Error al agregar post");
+            toast.success("Proveedor editado correctamente");
             return true;
         } catch (err) {
             console.error(err);
