@@ -2,28 +2,27 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../../styles/sharedStyles.css";
+import "../../styles/panelStyles.css";
 import useMaquinas from "../../hooks/UseMaquinas";
+import MenuButton from "../../components/MenuButton";
 
 function Maquinas() {
   const navigate = useNavigate();
   const [maquinas, setMaquinas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(null);
   const { fetchMaquinas, eliminarMaquina } = useMaquinas();
 
   const cargarMaquinas = async () => {
-    setLoading(true);
-    fetchMaquinas()
-      .then((data) => {
-        console.log(data);
-        setMaquinas(data);
-        setLoading(false);
-      })
+    fetchMaquinas().then((data) => {
+      setMaquinas(data);
+      setLoading(false);
+    });
   };
 
   useEffect(() => {
     cargarMaquinas();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div style={{ padding: 32 }}>
@@ -33,9 +32,14 @@ function Maquinas() {
         <div className="show-container">
           <div className="header">
             <h1>Máquinas</h1>
-            <button onClick={() => window.location.href = "/maquinas/agregar"}>
-              Agregar Máquina
-            </button>
+            <div>
+              <button
+                onClick={() => (window.location.href = "/maquinas/agregar")}
+              >
+                Agregar Máquina
+              </button>
+              <MenuButton />
+            </div>
           </div>
           <table className="show-table">
             <thead>
@@ -60,7 +64,9 @@ function Maquinas() {
                     <div className="dropdown">
                       <button
                         className="dots-button"
-                        onClick={() => { setOpen(open === index ? null : index) }}
+                        onClick={() => {
+                          setOpen(open === index ? null : index);
+                        }}
                       >
                         ⋮
                       </button>
@@ -81,19 +87,37 @@ function Maquinas() {
                               toast.custom((t) => {
                                 return (
                                   <div key={t.id} className="toast-custom">
-                                    <p>¿Estás seguro de eliminar esta maquina?</p>
+                                    <p>
+                                      ¿Estás seguro de eliminar esta maquina?
+                                    </p>
                                     <div className="toast-buttons">
-                                      <button className="cancel-button" onClick={() => toast.dismiss(t.id)}>Cancelar</button>
-                                      <button className="delete-button" onClick={() => {
-                                        toast.remove(t.id);
-                                        eliminarMaquina(maquina.id).then((data) => {
-                                          cargarMaquinas();
-                                          if (data) {
-                                          toast.success("Maquina eliminado correctamente", {
-                                            duration: 2000,
-                                          });}
-                                        })
-                                      }}>Eliminar</button>
+                                      <button
+                                        className="cancel-button"
+                                        onClick={() => toast.dismiss(t.id)}
+                                      >
+                                        Cancelar
+                                      </button>
+                                      <button
+                                        className="delete-button"
+                                        onClick={() => {
+                                          toast.remove(t.id);
+                                          eliminarMaquina(maquina.id).then(
+                                            (data) => {
+                                              cargarMaquinas();
+                                              if (data) {
+                                                toast.success(
+                                                  "Maquina eliminado correctamente",
+                                                  {
+                                                    duration: 2000
+                                                  }
+                                                );
+                                              }
+                                            }
+                                          );
+                                        }}
+                                      >
+                                        Eliminar
+                                      </button>
                                     </div>
                                   </div>
                                 );

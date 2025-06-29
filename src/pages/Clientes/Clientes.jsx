@@ -1,128 +1,97 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import useClientes from "../../hooks/UseClientes";
+import React, { useState } from "react";
+import MenuButton from "../../components/MenuButton";
+import ListaClientes from "./ListaClientes";
+import ListaClientesMasMaquinas from "./ListaClientesMasMaquinas";
+import ListaCobroMensual from "./ListaCobroMensual";
+import AgregarCliente from "./AgregarClientes";
+import EditarCliente from "./EditarCliente";
 import "../../styles/sharedStyles.css";
+import "../../styles/panelStyles.css";
 
 function Clientes() {
-  const apiUrl = import.meta.env.VITE_API_ENDPOINT;
-  const navigate = useNavigate();
-  const [clientes, setClientes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(null);
-  const { eliminarCliente } = useClientes();
+  const [pestañaActiva, setPestañaActiva] = useState("lista");
+  const [clienteIdEditar, setClienteIdEditar] = useState(null);
 
-
-  const cargarClientes = async () => {
-    setLoading(true);
-    const res = await fetch(`${apiUrl}/clientes`);
-    const data = await res.json();
-    setClientes(data);
-    setLoading(false);
+  const renderContenido = () => {
+    switch (pestañaActiva) {
+      case "lista":
+        return (
+          <ListaClientes
+            onAgregarClick={() => setPestañaActiva("agregar")}
+            onEditarClick={(clienteId) => {
+              setClienteIdEditar(clienteId);
+              setPestañaActiva("editar");
+            }}
+          />
+        );
+      case "agregar":
+        return <AgregarCliente onCancel={() => setPestañaActiva("lista")} />;
+      case "editar":
+        return (
+          <EditarCliente
+            clienteId={clienteIdEditar}
+            onCancel={() => {
+              setClienteIdEditar(null);
+              setPestañaActiva("lista");
+            }}
+          />
+        );
+      case "topMaquinas":
+        return <ListaClientesMasMaquinas />;
+      case "cobroMensual":
+        return <ListaCobroMensual />;
+      default:
+        return (
+          <ListaClientes
+            onAgregarClick={() => setPestañaActiva("agregar")}
+            onEditarClick={(clienteId) => {
+              setClienteIdEditar(clienteId);
+              setPestañaActiva("editar");
+            }}
+          />
+        );
+    }
   };
 
-  useEffect(() => {
-    cargarClientes();
-  }, []);
-
   return (
-    <div style={{ padding: 32 }}>
-      {loading ? (
-        <p>Cargando...</p>
-      ) : (
-        <div className="show-container">
-          <div className="header">
-            <h1>Clientes</h1>
-            <button onClick={() => window.location.href = "/clientes/agregar"}>
-              Agregar Cliente
-            </button>
-          </div>
-          <table className="show-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Correo</th>
-                <th>Dirección</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {clientes.map((cliente, index) => (
-                <tr key={cliente.id}>
-                  <td>{cliente.id}</td>
-                  <td>{cliente.nombre}</td>
-                  <td>{cliente.telefono}</td>
-                  <td>{cliente.correo}</td>
-                  <td>{cliente.direccion}</td>
-                  <td style={{ position: "relative" }}>
-                    <div className="dropdown">
-                      <button
-                        className="dots-button"
-                        onClick={() => setOpen(open === index ? null : index)}
-                      >
-                        ⋮
-                      </button>
-                      {open === index && (
-                        <div className="dropdown-content">
-                          <button
-                            className="dropdown-item"
-                            onClick={() =>
-                              navigate(`/clientes/editar/${cliente.id}`)
-                            }
-                          >
-                            Editar
-                          </button>
-                          <button
-                            className="dropdown-item"
-                            onClick={() => {
-                              setOpen(null);
-                              toast.custom((t) => {
-                                return (
-                                  <div key={t.id} className="toast-custom">
-                                    <p>¿Estás seguro de eliminar este cliente?</p>
-                                    <div className="toast-buttons">
-                                      <button className="cancel-button" onClick={() => toast.dismiss(t.id)}>Cancelar</button>
-                                      <button className="delete-button" onClick={() => {
-                                        toast.remove(t.id);
-                                        eliminarCliente(cliente.id).then((data) => {
-                                          cargarClientes();
-                                          if (data) {
-                                            toast.success("Maquina eliminado correctamente", {
-                                              duration: 2000,
-                                            });
-                                          }
-                                        })
-                                      }}>Eliminar</button>
-                                    </div>
-                                  </div>
-                                );
-                              });
-                            }}
-                          >
-                            Eliminar
-                          </button>
-                          <button
-                            className="dropdown-item"
-                            onClick={() =>
-                              navigate(`/clientes/alquilerMensual/${cliente.id}`, { state: { nombre: cliente.nombre } })
-                            }
-                          >
-                            Alquiler mensual
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="panel-container">
+      <div className="panel-header">
+        <h1 className="panel-title">Panel de Clientes</h1>
+        <div className="panel-menu-button">
+          <MenuButton />
         </div>
-      )
-      }
-    </div >
+      </div>
+
+      <div className="tabs-container">
+        <div className="tabs-wrapper">
+          <button
+            onClick={() => setPestañaActiva("lista")}
+            className={`tab-button ${
+              pestañaActiva === "lista" ? "active" : ""
+            }`}
+          >
+            Lista de Clientes
+          </button>
+          <button
+            onClick={() => setPestañaActiva("topMaquinas")}
+            className={`tab-button ${
+              pestañaActiva === "topMaquinas" ? "active" : ""
+            }`}
+          >
+            Top Clientes - Máquinas
+          </button>
+          <button
+            onClick={() => setPestañaActiva("cobroMensual")}
+            className={`tab-button ${
+              pestañaActiva === "cobroMensual" ? "active" : ""
+            }`}
+          >
+            Cobro Mensual
+          </button>
+        </div>
+      </div>
+      <div className="content-container">{renderContenido()}</div>
+    </div>
   );
 }
 

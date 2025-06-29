@@ -1,7 +1,7 @@
 import { useState } from "react"; // Import useState
 import useMantenimientos from "../../hooks/UseMantenimientos";
 
-export default function AgregarMantenimientos() {
+export default function AgregarMantenimientos({ onCancel }) {
   const { agregarMantenimiento } = useMantenimientos();
   // 1. Use useState for local form state
   const [mantenimiento, setMantenimiento] = useState({
@@ -19,7 +19,7 @@ export default function AgregarMantenimientos() {
     const { name, value } = event.target;
     setMantenimiento((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -68,10 +68,19 @@ export default function AgregarMantenimientos() {
       />
       <button
         onClick={() => {
-          agregarMantenimiento({ ...mantenimiento, id_maquina: Number(mantenimiento.id_maquina), fecha: mantenimiento.fecha.replace("T", " ") + ":00" });
+          agregarMantenimiento({
+            ...mantenimiento,
+            id_maquina: Number(mantenimiento.id_maquina),
+            fecha: mantenimiento.fecha.replace("T", " ") + ":00"
+          });
+          // Después de agregar exitosamente, volver a la lista
+          if (onCancel) onCancel();
         }}
       >
         Agregar Mantenimiento
+      </button>
+      <button onClick={onCancel} className="cancel-button">
+        Cancelar
       </button>
     </div>
   );

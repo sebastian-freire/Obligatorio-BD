@@ -81,3 +81,18 @@ def eliminar_mantenimiento(id):
         return jsonify({"mensaje": "Mantenimiento eliminado"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@mantenimientos_bp.route("/mantenimientos/<int:id>", methods=["GET"])
+def obtener_mantenimiento(id):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM mantenimientos WHERE id = %s", (id,))
+        mantenimiento = cursor.fetchone()
+        conn.close()
+        if mantenimiento:
+            return jsonify(mantenimiento)
+        else:
+            return jsonify({"error": "Mantenimiento no encontrado"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

@@ -1,38 +1,55 @@
 import { useEffect, useState } from "react";
 import useClientes from "../../hooks/UseClientes";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import "../../styles/sharedStyles.css";
 
+export default function EditarCliente({ clienteId, onCancel }) {
+  const [cliente, setCliente] = useState({
+    nombre: "",
+    telefono: "",
+    correo: "",
+    direccion: ""
+  });
 
-export default function EditarCliente() {
-  const params = useParams();
-  const navigate = useNavigate();
-  const [cliente, setCliente] = useState({});
-
-  const {
-    fetchCliente,
-    editarCliente
-  } = useClientes();
+  const { fetchCliente, editarCliente } = useClientes();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setCliente((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
   useEffect(() => {
-    console.log(typeof(params.idCliente));
-    fetchCliente(params.idCliente).then((data) => {
-      if (data) {
-        console.log(data);
-        setCliente(data);
-      } else {
-        navigate(-1);
-      }
-    });
-  }, [params.idCliente]);
+    if (clienteId) {
+      fetchCliente(clienteId).then((data) => {
+        if (data) {
+          setCliente(data);
+        } else {
+          toast.error("Error al cargar los datos del cliente");
+          if (onCancel) onCancel();
+        }
+      });
+    }
+  }, [clienteId]);
+
+  const handleEditar = async () => {
+    if (
+      cliente.nombre.trim() === "" ||
+      cliente.telefono.trim() === "" ||
+      cliente.correo.trim() === "" ||
+      cliente.direccion.trim() === ""
+    ) {
+      toast.error("Por favor, complete todos los campos obligatorios.");
+      return;
+    }
+
+    const resultado = await editarCliente(clienteId, cliente);
+    if (resultado) {
+      if (onCancel) onCancel();
+    }
+  };
 
   return (
     <div className="agregar-cliente-container">
@@ -41,59 +58,40 @@ export default function EditarCliente() {
         type="text"
         placeholder="Nombre"
         name="nombre"
-        value={cliente.nombre}
+        value={cliente.nombre || ""}
         maxLength={50}
-        style={{
-          borderColor: '#e74c3c',
-          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
-          borderRadius: '2px'
-        }}
         onChange={handleChange}
       />
-      <br />
       <input
         type="tel"
         placeholder="Teléfono"
-        value={cliente.telefono}
+        value={cliente.telefono || ""}
         name="telefono"
         maxLength={20}
-        style={{
-          borderColor: '#e74c3c',
-          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
-          borderRadius: '2px'
-        }}
         onChange={handleChange}
       />
-      <br />
       <input
         type="email"
         placeholder="Correo"
-        value={cliente.correo}
+        value={cliente.correo || ""}
         name="correo"
         maxLength={50}
-        style={{
-          borderColor: '#e74c3c',
-          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
-          borderRadius: '2px'
-        }}
         onChange={handleChange}
       />
-      <br />
       <input
-        type="direction"
-        value={cliente.direccion}
+        type="text"
+        value={cliente.direccion || ""}
         placeholder="Dirección"
         name="direccion"
         maxLength={50}
-        style={{
-          borderColor: '#e74c3c',
-          boxShadow: '0 0 5px rgba(231, 76, 60, 0.5)',
-          borderRadius: '2px'
-        }}
         onChange={handleChange}
       />
-      <br />
-      <button onClick={() => editarCliente(params.idCliente, cliente)}>Editar Cliente</button>
+      <div className="form-buttons">
+        <button onClick={handleEditar}>Editar Cliente</button>
+        <button onClick={onCancel} className="cancel-button">
+          Cancelar
+        </button>
+      </div>
     </div>
   );
 }

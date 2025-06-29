@@ -4,16 +4,22 @@ import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import MenuPage from "./pages/MenuPage/MenuPage.jsx";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "./context/userContext.jsx";
-import { Clientes, AgregarCliente, EditarCliente, AlquilerMensual } from "./pages/Clientes";
+import { Clientes, AgregarCliente, EditarCliente } from "./pages/Clientes";
 import { Maquinas, AgregarMaquina, EditarMaquina } from "./pages/Maquinas";
-import { Mantenimientos, AgregarMantenimientos, EditarMantenimiento } from "./pages/Mantenimiento";
-import { Proveedores, AgregarProveedor, EditarProveedor } from "./pages/Proveedores";
+import {
+  Mantenimientos,
+  AgregarMantenimientos,
+  EditarMantenimiento
+} from "./pages/Mantenimiento";
+import {
+  Proveedores,
+  AgregarProveedor,
+  EditarProveedor
+} from "./pages/Proveedores";
 import { Insumos, AgregarInsumo, EditarInsumo } from "./pages/Insumos";
 import { Tecnicos, AgregarTecnico, EditarTecnico } from "./pages/Tecnicos";
 
 function App() {
-  const currentUser = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : { nombre: "Invitado", id: 0 };
-
   return (
     <UserProvider>
       <Routes>
@@ -25,7 +31,6 @@ function App() {
         <Route path="/clientes" element={<Clientes />} />
         <Route path="/clientes/agregar" element={<AgregarCliente />} />
         <Route path="/clientes/editar/:idCliente" element={<EditarCliente />} />
-        <Route path="/clientes/alquilerMensual/:idCliente" element={<AlquilerMensual />} />
 
         {/* Rutas Máquinas */}
         <Route path="/maquinas" element={<Maquinas />} />
@@ -34,13 +39,22 @@ function App() {
 
         {/* Rutas Mantenimientos */}
         <Route path="/mantenimientos" element={<Mantenimientos />} />
-        <Route path="/mantenimientos/agregar" element={<AgregarMantenimientos />} />
-        <Route path="/mantenimientos/editar/:idMantenimiento" element={<EditarMantenimiento />} />
+        <Route
+          path="/mantenimientos/agregar"
+          element={<AgregarMantenimientos />}
+        />
+        <Route
+          path="/mantenimientos/editar/:idMantenimiento"
+          element={<EditarMantenimiento />}
+        />
 
         {/* Rutas Proveedores */}
         <Route path="/proveedores" element={<Proveedores />} />
         <Route path="/proveedores/agregar" element={<AgregarProveedor />} />
-        <Route path="/proveedores/editar/:idProveedor" element={<EditarProveedor />} />
+        <Route
+          path="/proveedores/editar/:idProveedor"
+          element={<EditarProveedor />}
+        />
 
         {/* Rutas Insumos */}
         <Route path="/insumos" element={<Insumos />} />
@@ -54,7 +68,6 @@ function App() {
       </Routes>
       <Toaster />
     </UserProvider>
-
   );
 }
 

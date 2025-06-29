@@ -77,3 +77,18 @@ def eliminar_insumo(id):
         return jsonify({"mensaje": "Insumo eliminado"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@insumos_bp.route("/insumos/<int:id>", methods=["GET"])
+def obtener_insumo(id):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM insumos WHERE id = %s", (id,))
+        insumo = cursor.fetchone()
+        conn.close()
+        if insumo:
+            return jsonify(insumo)
+        else:
+            return jsonify({"error": "Insumo no encontrado"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

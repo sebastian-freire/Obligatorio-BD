@@ -1,0 +1,133 @@
+/* Estilos para componentes con pestañas y headers fijos - Tema rosado pastel */
+
+/* Contenedor principal */
+.panel-container {
+  padding: 32px;
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    var(--light-pink) 0%,
+    var(--background) 100%
+  );
+}
+
+/* Header fijo */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 32px auto;
+  padding: 0 24px;
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.panel-title {
+  margin: 0;
+  color: var(--dark-pink);
+  font-weight: 600;
+  font-size: 2rem;
+}
+
+.panel-menu-button {
+  flex-shrink: 0;
+}
+
+/* Contenedor de pestañas */
+.tabs-container {
+  margin-bottom: 24px;
+  height: 60px;
+  overflow: hidden;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tabs-wrapper {
+  display: flex;
+  gap: 4px;
+  height: 58px;
+  align-items: flex-end;
+  padding: 0 24px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Línea base para todas las pestañas */
+.tabs-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--secondary-pink);
+  z-index: 1;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  height: 40px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  font-weight: 500;
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 2;
+  font-size: 14px;
+  transition: all 0.2s ease;
+
+  /* Pestañas rectangulares minimalistas */
+  border-top: 2px solid var(--border);
+  border-left: 2px solid var(--border);
+  border-right: 2px solid var(--border);
+  border-radius: 12px 12px 0 0;
+  margin-bottom: 2px;
+}
+
+.tab-button:hover {
+  background: var(--light-pink);
+  color: var(--text-primary);
+  border-top: 2px solid var(--accent-pink);
+  border-left: 2px solid var(--accent-pink);
+  border-right: 2px solid var(--accent-pink);
+  transform: translateY(-1px);
+}
+
+.tab-button.active {
+  background: var(--surface);
+  color: var(--dark-pink);
+  font-weight: 600;
+  z-index: 3;
+  border-top: 3px solid var(--dark-pink);
+  border-left: 3px solid var(--dark-pink);
+  border-right: 3px solid var(--dark-pink);
+  border-bottom: none;
+  margin-bottom: -2px;
+  height: 42px;
+  box-shadow: 0 -4px 12px var(--shadow);
+}
+
+/* Contenedor de contenido */
+.content-container {
+  min-height: calc(100vh - 250px);
+  position: relative;
+  overflow: visible;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px var(--shadow);
+  border: 1px solid var(--border);
+  padding: 24px;
+}

@@ -5,6 +5,7 @@ from auth import require_admin
 maquinas_bp = Blueprint('maquinas', __name__)
 
 @maquinas_bp.route("/maquinas", methods=["GET"])
+@require_admin
 def obtener_maquinas():
     try:
         conn = get_connection()
@@ -17,6 +18,7 @@ def obtener_maquinas():
         return jsonify({"error": str(e)}), 500
     
 @maquinas_bp.route("/maquinas/<int:id>", methods=["GET"])
+@require_admin
 def obtener_maquina():
     try:
         conn = get_connection()
@@ -29,6 +31,7 @@ def obtener_maquina():
         return jsonify({"error": str(e)}), 500
     
 @maquinas_bp.route("/maquinas/cliente/<int:id>", methods=["GET"])
+@require_admin
 def obtener_maquinas_cliente():
     try:
         conn = get_connection()

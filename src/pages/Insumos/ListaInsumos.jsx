@@ -1,67 +1,79 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import useTecnicos from "../../hooks/UseTecnicos";
-import "../../styles/sharedStyles.css";
-import "../../styles/panelStyles.css";
-import MenuButton from "../../components/MenuButton";
 import toast from "react-hot-toast";
-export default function Tecnicos() {
-  const navigate = useNavigate();
-  const { fetchTecnicos, eliminarTecnico } = useTecnicos();
-  const [open, setOpen] = useState(null);
-  const [tecnicos, setTecnicos] = useState([]);
+import useInsumos from "../../hooks/UseInsumos";
+import "../../styles/sharedStyles.css";
 
-  const cargarTecnicos = async () => {
-    fetchTecnicos().then((data) => {
-      setTecnicos(data);
-    });
+function ListaInsumos({ onAgregarClick, onEditarClick }) {
+  const { fetchInsumos, eliminarInsumo } = useInsumos();
+  const [insumos, setInsumos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(null);
+
+  const cargarInsumos = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchInsumos();
+      setInsumos(data);
+    } catch (error) {
+      console.error("Error cargando insumos:", error);
+      toast.error("Error al cargar la lista de insumos");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Cerrar dropdown al hacer click fuera
   useEffect(() => {
-    cargarTecnicos();
+    const handleClickOutside = () => setOpen(null);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    cargarInsumos();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return (
-    <div className="panel-container">
-      <div className="panel-header">
-        <h1 className="panel-title">Panel de Técnicos</h1>
-        <div className="panel-menu-button">
-          <MenuButton />
-        </div>
-      </div>
+  const handleDropdownClick = (e, index) => {
+    e.stopPropagation(); // Evitar que se cierre inmediatamente
+    setOpen(open === index ? null : index);
+  };
 
-      <div className="content-container">
+  return (
+    <div>
+      {loading ? (
+        <p>Cargando...</p>
+      ) : (
         <div className="show-container">
           <div className="header">
-            <h1>Técnicos</h1>
+            <h1>Insumos</h1>
             <div>
-              <button onClick={() => navigate("/tecnicos/agregar")}>
-                Agregar Técnico
-              </button>
+              <button onClick={onAgregarClick}>Agregar Insumo</button>
             </div>
           </div>
           <table className="show-table">
             <thead>
               <tr>
-                <th>CI</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Teléfono</th>
+                <th>ID</th>
+                <th>Descripción</th>
+                <th>Tipo</th>
+                <th>Precio Unitario</th>
+                <th>ID Proveedor</th>
                 <th>✏️</th>
               </tr>
             </thead>
             <tbody>
-              {tecnicos.map((tecnico, index) => (
-                <tr key={tecnico.ci}>
-                  <td>{tecnico.ci}</td>
-                  <td>{tecnico.nombre}</td>
-                  <td>{tecnico.apellido}</td>
-                  <td>{tecnico.telefono}</td>
+              {insumos.map((insumo, index) => (
+                <tr key={insumo.id}>
+                  <td>{insumo.id}</td>
+                  <td>{insumo.descripcion}</td>
+                  <td>{insumo.tipo}</td>
+                  <td>${insumo.precio_unitario}</td>
+                  <td>{insumo.id_proveedor}</td>
                   <td>
                     <div className="dropdown">
                       <button
                         className="dots-button"
-                        onClick={() => setOpen(open === index ? null : index)}
+                        onClick={(e) => handleDropdownClick(e, index)}
                       >
                         ⋮
                       </button>
@@ -70,7 +82,8 @@ export default function Tecnicos() {
                           <button
                             className="dropdown-item"
                             onClick={() => {
-                              navigate(`/tecnicos/editar/${tecnico.ci}`);
+                              setOpen(null);
+                              onEditarClick(insumo.id);
                             }}
                           >
                             Editar
@@ -84,7 +97,7 @@ export default function Tecnicos() {
                                   return (
                                     <div key={t.id} className="toast-custom">
                                       <p>
-                                        ¿Estás seguro de eliminar este tecnico?
+                                        ¿Estás seguro de eliminar este insumo?
                                       </p>
                                       <div className="toast-buttons">
                                         <button
@@ -97,13 +110,13 @@ export default function Tecnicos() {
                                           className="delete-button"
                                           onClick={() => {
                                             toast.remove(t.id);
-                                            eliminarTecnico(tecnico.ci).then(
+                                            eliminarInsumo(insumo.id).then(
                                               (data) => {
-                                                cargarTecnicos();
+                                                cargarInsumos();
                                                 if (data) {
                                                   const successToast =
                                                     toast.success(
-                                                      "Tecnico eliminado correctamente"
+                                                      "Insumo eliminado correctamente"
                                                     );
                                                   setTimeout(() => {
                                                     toast.dismiss(successToast);
@@ -134,7 +147,9 @@ export default function Tecnicos() {
             </tbody>
           </table>
         </div>
-      </div>
+      )}
     </div>
   );
 }
+
+export default ListaInsumos;

@@ -1,67 +1,82 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import useTecnicos from "../../hooks/UseTecnicos";
-import "../../styles/sharedStyles.css";
-import "../../styles/panelStyles.css";
-import MenuButton from "../../components/MenuButton";
 import toast from "react-hot-toast";
-export default function Tecnicos() {
-  const navigate = useNavigate();
-  const { fetchTecnicos, eliminarTecnico } = useTecnicos();
-  const [open, setOpen] = useState(null);
-  const [tecnicos, setTecnicos] = useState([]);
+import useClientes from "../../hooks/UseClientes";
+import "../../styles/sharedStyles.css";
 
-  const cargarTecnicos = async () => {
-    fetchTecnicos().then((data) => {
-      setTecnicos(data);
-    });
+function ListaClientes({ onAgregarClick, onEditarClick }) {
+  const apiUrl = import.meta.env.VITE_API_ENDPOINT;
+  const [clientes, setClientes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(null);
+  const { eliminarCliente } = useClientes();
+
+  const cargarClientes = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${apiUrl}/clientes`);
+      if (!res.ok) throw new Error("Error al cargar clientes");
+      const data = await res.json();
+      setClientes(data);
+    } catch (error) {
+      console.error("Error cargando clientes:", error);
+      toast.error("Error al cargar la lista de clientes");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Cerrar dropdown al hacer click fuera
   useEffect(() => {
-    cargarTecnicos();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const handleClickOutside = () => setOpen(null);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    cargarClientes();
+  }, []);
+
+  const handleDropdownClick = (e, index) => {
+    e.stopPropagation(); // Evitar que se cierre inmediatamente
+    setOpen(open === index ? null : index);
+  };
 
   return (
-    <div className="panel-container">
-      <div className="panel-header">
-        <h1 className="panel-title">Panel de Técnicos</h1>
-        <div className="panel-menu-button">
-          <MenuButton />
-        </div>
-      </div>
-
-      <div className="content-container">
+    <div>
+      {loading ? (
+        <p>Cargando...</p>
+      ) : (
         <div className="show-container">
           <div className="header">
-            <h1>Técnicos</h1>
+            <h1>Clientes</h1>
             <div>
-              <button onClick={() => navigate("/tecnicos/agregar")}>
-                Agregar Técnico
-              </button>
+              <button onClick={onAgregarClick}>Agregar Cliente</button>
             </div>
           </div>
           <table className="show-table">
             <thead>
               <tr>
-                <th>CI</th>
+                <th>ID</th>
                 <th>Nombre</th>
-                <th>Apellido</th>
                 <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Dirección</th>
                 <th>✏️</th>
               </tr>
             </thead>
             <tbody>
-              {tecnicos.map((tecnico, index) => (
-                <tr key={tecnico.ci}>
-                  <td>{tecnico.ci}</td>
-                  <td>{tecnico.nombre}</td>
-                  <td>{tecnico.apellido}</td>
-                  <td>{tecnico.telefono}</td>
-                  <td>
+              {clientes.map((cliente, index) => (
+                <tr key={cliente.id}>
+                  <td>{cliente.id}</td>
+                  <td>{cliente.nombre}</td>
+                  <td>{cliente.telefono}</td>
+                  <td>{cliente.correo}</td>
+                  <td>{cliente.direccion}</td>
+                  <td style={{ position: "relative" }}>
                     <div className="dropdown">
                       <button
                         className="dots-button"
-                        onClick={() => setOpen(open === index ? null : index)}
+                        onClick={(e) => handleDropdownClick(e, index)}
                       >
                         ⋮
                       </button>
@@ -70,7 +85,8 @@ export default function Tecnicos() {
                           <button
                             className="dropdown-item"
                             onClick={() => {
-                              navigate(`/tecnicos/editar/${tecnico.ci}`);
+                              setOpen(null);
+                              if (onEditarClick) onEditarClick(cliente.id);
                             }}
                           >
                             Editar
@@ -84,7 +100,7 @@ export default function Tecnicos() {
                                   return (
                                     <div key={t.id} className="toast-custom">
                                       <p>
-                                        ¿Estás seguro de eliminar este tecnico?
+                                        ¿Estás seguro de eliminar este cliente?
                                       </p>
                                       <div className="toast-buttons">
                                         <button
@@ -97,13 +113,13 @@ export default function Tecnicos() {
                                           className="delete-button"
                                           onClick={() => {
                                             toast.remove(t.id);
-                                            eliminarTecnico(tecnico.ci).then(
+                                            eliminarCliente(cliente.id).then(
                                               (data) => {
-                                                cargarTecnicos();
+                                                cargarClientes();
                                                 if (data) {
                                                   const successToast =
                                                     toast.success(
-                                                      "Tecnico eliminado correctamente"
+                                                      "Cliente eliminado correctamente"
                                                     );
                                                   setTimeout(() => {
                                                     toast.dismiss(successToast);
@@ -134,7 +150,9 @@ export default function Tecnicos() {
             </tbody>
           </table>
         </div>
-      </div>
+      )}
     </div>
   );
 }
+
+export default ListaClientes;
