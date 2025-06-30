@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { handleApiResponse, handleApiError } from "../utils/apiUtils";
 
 export default function useClientes() {
   const apiUrl = import.meta.env.VITE_API_ENDPOINT;
@@ -7,10 +7,9 @@ export default function useClientes() {
     try {
       const url = `${apiUrl}/clientes/${id}`;
       const res = await fetch(url);
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      return handleApiError(err);
     }
   };
 
@@ -19,10 +18,9 @@ export default function useClientes() {
     try {
       const url = `${apiUrl}/clientes`;
       const res = await fetch(url);
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      return handleApiError(err);
     }
   };
 
@@ -40,11 +38,10 @@ export default function useClientes() {
           direccion: cliente.direccion
         })
       });
-      if (!res.ok) throw new Error("Error al agregar post");
-      toast.success("Cliente agregado correctamente");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
+      return handleApiError(err);
     }
   };
 
@@ -62,12 +59,10 @@ export default function useClientes() {
           direccion: cliente.direccion
         })
       });
-      if (!res.ok) throw new Error("Error al editar cliente");
-      toast.success("Cliente editado correctamente");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      toast.error("Error al editar cliente");
+      return handleApiError(err);
     }
   };
 
@@ -79,11 +74,10 @@ export default function useClientes() {
           "Content-Type": "application/json"
         }
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      return false;
+      return handleApiError(err);
     }
   };
 

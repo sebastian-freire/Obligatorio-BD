@@ -10,73 +10,108 @@ def obtener_insumos():
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM insumos")
         insumos = cursor.fetchall()
-        conn.close()
-        return jsonify(insumos)
+        
+        return jsonify(insumos), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
 @insumos_bp.route("/insumos", methods=["POST"])
 def crear_insumo():
     try:
-        data = request.json
-        descripcion = data.get("descripcion")
-        tipo = data.get("tipo")
-        precio_unitario = data.get("precio_unitario")
-        id_proveedor = data.get("id_proveedor")
+        data = request.get_json()
+        
         conn = get_connection()
         cursor = conn.cursor()
+        
+        # Validar foreign key
+        if 'id_proveedor' in data:
+            cursor.execute("SELECT id FROM proveedores WHERE id = %s", (data['id_proveedor'],))
+            if not cursor.fetchone():
+                return jsonify({"error": "El proveedor con ID {} no existe".format(data['id_proveedor'])}), 400
+        
         cursor.execute(
             "INSERT INTO insumos (descripcion, tipo, precio_unitario, id_proveedor) VALUES (%s, %s, %s, %s)",
-            (descripcion, tipo, precio_unitario, id_proveedor)
+            (data.get("descripcion"), data.get("tipo"), data.get("precio_unitario"), data.get("id_proveedor"))
         )
         conn.commit()
-        conn.close()
-        return jsonify({"mensaje": "Insumo creado"}), 201
+        
+        return jsonify({"message": "Insumo creado exitosamente"}), 201
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
 @insumos_bp.route("/insumos/<int:id>", methods=["PATCH"])
 def modificar_insumo(id):
     try:
-        data = request.json
-        campos = []
-        valores = []
-        if "descripcion" in data:
-            campos.append("descripcion=%s")
-            valores.append(data["descripcion"])
-        if "tipo" in data:
-            campos.append("tipo=%s")
-            valores.append(data["tipo"])
-        if "precio_unitario" in data:
-            campos.append("precio_unitario=%s")
-            valores.append(data["precio_unitario"])
-        if "id_proveedor" in data:
-            campos.append("id_proveedor=%s")
-            valores.append(data["id_proveedor"])
-        if not campos:
-            return jsonify({"mensaje": "No se enviaron campos para actualizar"}), 400
-        valores.append(id)
-        query = f"UPDATE insumos SET {', '.join(campos)} WHERE id=%s"
+        data = request.get_json()
+        
         conn = get_connection()
         cursor = conn.cursor()
+        
+        # Verificar que el insumo existe
+        cursor.execute("SELECT id FROM insumos WHERE id = %s", (id,))
+        if not cursor.fetchone():
+            return jsonify({"error": "Insumo no encontrado"}), 404
+        
+        # Validar foreign key
+        if 'id_proveedor' in data:
+            cursor.execute("SELECT id FROM proveedores WHERE id = %s", (data['id_proveedor'],))
+            if not cursor.fetchone():
+                return jsonify({"error": "El proveedor con ID {} no existe".format(data['id_proveedor'])}), 400
+        
+        # Construir query dinámicamente
+        campos = []
+        valores = []
+        campos_permitidos = ["descripcion", "tipo", "precio_unitario", "id_proveedor"]
+        
+        for campo in campos_permitidos:
+            if campo in data:
+                campos.append(f"{campo}=%s")
+                valores.append(data[campo])
+        
+        if not campos:
+            return jsonify({"error": "No se enviaron campos válidos para actualizar"}), 400
+        
+        # Ejecutar actualización
+        valores.append(id)
+        query = f"UPDATE insumos SET {', '.join(campos)} WHERE id=%s"
         cursor.execute(query, valores)
         conn.commit()
-        conn.close()
-        return jsonify({"mensaje": "Insumo modificado"}), 200
+        
+        return jsonify({"message": "Insumo modificado exitosamente"}), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
 @insumos_bp.route("/insumos/<int:id>", methods=["DELETE"])
 def eliminar_insumo(id):
     try:
         conn = get_connection()
         cursor = conn.cursor()
+        
         cursor.execute("DELETE FROM insumos WHERE id = %s", (id,))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Insumo no encontrado"}), 404
+            
         conn.commit()
-        conn.close()
-        return jsonify({"mensaje": "Insumo eliminado"}), 200
+        return jsonify({"message": "Insumo eliminado exitosamente"}), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
 @insumos_bp.route("/insumos/<int:id>", methods=["GET"])
 def obtener_insumo(id):
@@ -85,10 +120,14 @@ def obtener_insumo(id):
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM insumos WHERE id = %s", (id,))
         insumo = cursor.fetchone()
-        conn.close()
+        
         if insumo:
-            return jsonify(insumo)
+            return jsonify(insumo), 200
         else:
             return jsonify({"error": "Insumo no encontrado"}), 404
+            
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()

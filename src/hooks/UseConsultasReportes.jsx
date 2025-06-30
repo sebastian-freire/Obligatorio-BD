@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { handleApiResponse, handleApiError } from "../utils/apiUtils";
 
 export default function useConsultasReportes() {
   const apiUrl = import.meta.env.VITE_API_ENDPOINT;
@@ -8,13 +8,9 @@ export default function useConsultasReportes() {
     try {
       const url = `${apiUrl}/cobro_mensual_cliente`;
       const res = await fetch(url);
-      if (!res.ok)
-        throw new Error("Error al obtener cobro mensual por cliente");
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch cobro mensual cliente:", err);
-      toast.error("Error al cargar cobro mensual por cliente");
+      handleApiError(err);
       return [];
     }
   };
@@ -24,12 +20,9 @@ export default function useConsultasReportes() {
     try {
       const url = `${apiUrl}/insumos_costo_total`;
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Error al obtener costo total de insumos");
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch insumos costo total:", err);
-      toast.error("Error al cargar costo total de insumos");
+      handleApiError(err);
       return [];
     }
   };
@@ -39,13 +32,9 @@ export default function useConsultasReportes() {
     try {
       const url = `${apiUrl}/insumos_cantidad_total`;
       const res = await fetch(url);
-      if (!res.ok)
-        throw new Error("Error al obtener cantidad total de insumos");
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch insumos cantidad total:", err);
-      toast.error("Error al cargar cantidad total de insumos");
+      handleApiError(err);
       return [];
     }
   };
@@ -55,13 +44,9 @@ export default function useConsultasReportes() {
     try {
       const url = `${apiUrl}/tecnicos_mas_mantenimientos`;
       const res = await fetch(url);
-      if (!res.ok)
-        throw new Error("Error al obtener técnicos con más mantenimientos");
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch tecnicos mas mantenimientos:", err);
-      toast.error("Error al cargar técnicos con más mantenimientos");
+      handleApiError(err);
       return [];
     }
   };
@@ -71,13 +56,9 @@ export default function useConsultasReportes() {
     try {
       const url = `${apiUrl}/clientes_mas_maquinas`;
       const res = await fetch(url);
-      if (!res.ok)
-        throw new Error("Error al obtener clientes con más máquinas");
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch clientes mas maquinas:", err);
-      toast.error("Error al cargar clientes con más máquinas");
+      handleApiError(err);
       return [];
     }
   };
@@ -104,8 +85,7 @@ export default function useConsultasReportes() {
         clientesMaquinas
       };
     } catch (err) {
-      console.error("Failed to fetch all reports:", err);
-      toast.error("Error al cargar los reportes");
+      handleApiError(err);
       return {
         cobroMensual: [],
         insumosCosto: [],

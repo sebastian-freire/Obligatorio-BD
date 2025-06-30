@@ -12,12 +12,15 @@ def obtener_tecnicos():
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM tecnicos")
         tecnicos = cursor.fetchall()
-        conn.close()
-        return jsonify(tecnicos)
+        
+        return jsonify(tecnicos), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
-# Obtener un técnico específico por CI
 @tecnicos_bp.route("/tecnicos/<ci>", methods=["GET"])
 @require_admin
 def obtener_tecnico(ci):
@@ -26,63 +29,78 @@ def obtener_tecnico(ci):
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM tecnicos WHERE ci = %s", (ci,))
         tecnico = cursor.fetchone()
-        conn.close()
+        
         if tecnico:
-            return jsonify(tecnico)
+            return jsonify(tecnico), 200
         else:
             return jsonify({"error": "Técnico no encontrado"}), 404
+            
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
 @tecnicos_bp.route("/tecnicos", methods=["POST"])
 @require_admin
 def crear_tecnico():
     try:
-        data = request.json
-        ci = data.get("ci")
-        nombre = data.get("nombre")
-        apellido = data.get("apellido")
-        telefono = data.get("telefono")
+        data = request.get_json()
         conn = get_connection()
         cursor = conn.cursor()
+        
         cursor.execute(
             "INSERT INTO tecnicos (ci, nombre, apellido, telefono) VALUES (%s, %s, %s, %s)",
-            (ci, nombre, apellido, telefono)
+            (data['ci'], data['nombre'], data['apellido'], data.get('telefono', ''))
         )
+        
         conn.commit()
-        conn.close()
-        return jsonify({"mensaje": "Técnico creado"}), 201
+        return jsonify({"message": "Técnico creado exitosamente"}), 201
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
 @tecnicos_bp.route("/tecnicos/<ci>", methods=["PATCH"])
 @require_admin
 def modificar_tecnico(ci):
     try:
-        data = request.json
-        campos = []
-        valores = []
-        if "nombre" in data:
-            campos.append("nombre=%s")
-            valores.append(data["nombre"])
-        if "apellido" in data:
-            campos.append("apellido=%s")
-            valores.append(data["apellido"])
-        if "telefono" in data:
-            campos.append("telefono=%s")
-            valores.append(data["telefono"])
-        if not campos:
-            return jsonify({"mensaje": "No se enviaron campos para actualizar"}), 400
-        valores.append(ci)
-        query = f"UPDATE tecnicos SET {', '.join(campos)} WHERE ci=%s"
+        data = request.get_json()
         conn = get_connection()
         cursor = conn.cursor()
+        
+        # Verificar que el técnico existe
+        cursor.execute("SELECT ci FROM tecnicos WHERE ci = %s", (ci,))
+        if not cursor.fetchone():
+            return jsonify({"error": "Técnico no encontrado"}), 404
+        
+        # Construir query dinámicamente
+        campos = []
+        valores = []
+        campos_permitidos = ["nombre", "apellido", "telefono"]
+        
+        for campo in campos_permitidos:
+            if campo in data:
+                campos.append(f"{campo}=%s")
+                valores.append(data[campo])
+        
+        if not campos:
+            return jsonify({"error": "No se enviaron campos válidos para actualizar"}), 400
+        
+        valores.append(ci)
+        query = f"UPDATE tecnicos SET {', '.join(campos)} WHERE ci=%s"
         cursor.execute(query, valores)
+        
         conn.commit()
-        conn.close()
-        return jsonify({"mensaje": "Técnico modificado"}), 200
+        return jsonify({"message": "Técnico modificado exitosamente"}), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
 @tecnicos_bp.route("/tecnicos/<ci>", methods=["DELETE"])
 @require_admin
@@ -90,9 +108,17 @@ def eliminar_tecnico(ci):
     try:
         conn = get_connection()
         cursor = conn.cursor()
+        
         cursor.execute("DELETE FROM tecnicos WHERE ci = %s", (ci,))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Técnico no encontrado"}), 404
+            
         conn.commit()
-        conn.close()
-        return jsonify({"mensaje": "Técnico eliminado"}), 200
+        return jsonify({"message": "Técnico eliminado exitosamente"}), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()

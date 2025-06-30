@@ -3,7 +3,6 @@ from db import get_connection
 
 consultas_reportes_bp = Blueprint('consultas_reportes', __name__)
 
-# Cobro mensual por cliente (suma de insumos y alquiler)
 @consultas_reportes_bp.route("/cobro_mensual_cliente", methods=["GET"])
 def cobro_mensual_cliente():
     try:
@@ -23,12 +22,15 @@ def cobro_mensual_cliente():
             GROUP BY maquinas.id_cliente
         ''')
         clientes = cursor.fetchall()
-        conn.close()
-        return jsonify(clientes)
+        
+        return jsonify(clientes), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
     
-# Costo de insumos mas usados
 @consultas_reportes_bp.route("/insumos_costo_total", methods=["GET"])
 def insumos_costo_total():
     try:
@@ -40,15 +42,18 @@ def insumos_costo_total():
             FROM insumos
             JOIN registro_consumo ON insumos.id = registro_consumo.id_insumo
             GROUP BY insumos.id, descripcion, precio_unitario
-            ORDER BY costoTotal DESC LIMIT   4;
+            ORDER BY costoTotal DESC LIMIT 4;
         ''')
         insumos = cursor.fetchall()
-        conn.close()
-        return jsonify(insumos)
+        
+        return jsonify(insumos), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
     
-# Costo de insumos mas usados POR CANTIDAD
 @consultas_reportes_bp.route("/insumos_cantidad_total", methods=["GET"])
 def insumos_cantidad_total():
     try:
@@ -60,15 +65,18 @@ def insumos_cantidad_total():
             FROM insumos
             JOIN registro_consumo ON insumos.id = registro_consumo.id_insumo
             GROUP BY insumos.id, descripcion, precio_unitario
-            ORDER BY cantidadTotal DESC LIMIT   4;
+            ORDER BY cantidadTotal DESC LIMIT 4;
         ''')
         insumos = cursor.fetchall()
-        conn.close()
-        return jsonify(insumos)
+        
+        return jsonify(insumos), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
-# Tecnicos con más mantenimientos
 @consultas_reportes_bp.route("/tecnicos_mas_mantenimientos", methods=["GET"])
 def tecnicos_mas_mantenimientos():
     try:
@@ -82,12 +90,15 @@ def tecnicos_mas_mantenimientos():
             ORDER BY cantidadMantenimientos DESC LIMIT 4;
         ''')
         tecnicos = cursor.fetchall()
-        conn.close()
-        return jsonify(tecnicos)
+        
+        return jsonify(tecnicos), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
     
-# Clientes con mas maquinas
 @consultas_reportes_bp.route("/clientes_mas_maquinas", methods=["GET"])
 def clientes_mas_maquinas():
     try:
@@ -101,7 +112,11 @@ def clientes_mas_maquinas():
             ORDER BY total_maquinas DESC LIMIT 4;
         ''')
         clientes = cursor.fetchall()
-        conn.close()
-        return jsonify(clientes)
+        
+        return jsonify(clientes), 200
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()

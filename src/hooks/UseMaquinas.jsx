@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { handleApiResponse, handleApiError } from "../utils/apiUtils";
 import { useUser } from "../context/UserContext";
 
 export default function useMaquinas() {
@@ -11,10 +11,9 @@ export default function useMaquinas() {
       const res = await fetch(url, {
         headers: getAuthHeaders()
       });
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      return handleApiError(err);
     }
   };
 
@@ -24,10 +23,9 @@ export default function useMaquinas() {
       const res = await fetch(url, {
         headers: getAuthHeaders()
       });
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      return handleApiError(err);
     }
   };
 
@@ -37,10 +35,9 @@ export default function useMaquinas() {
       const res = await fetch(url, {
         headers: getAuthHeaders()
       });
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      return handleApiError(err);
     }
   };
 
@@ -50,11 +47,10 @@ export default function useMaquinas() {
         method: "DELETE",
         headers: getAuthHeaders()
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      return false;
+      return handleApiError(err);
     }
   };
 
@@ -70,13 +66,10 @@ export default function useMaquinas() {
           costo_alquiler_mensual: maquina.costo_alquiler_mensual
         })
       });
-      if (!res.ok) throw new Error("Error al editar máquina");
-      toast.success("Maquina editada correctamente");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      toast.error("Error al editar la máquina");
-      return false;
+      return handleApiError(err);
     }
   };
 
@@ -92,13 +85,10 @@ export default function useMaquinas() {
           costo_alquiler_mensual: maquina.costo_alquiler_mensual
         })
       });
-      if (!res.ok) throw new Error("Error al agregar máquina");
-      toast.success("Maquina agregada correctamente");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      toast.error("Error al agregar la máquina");
-      return false;
+      return handleApiError(err);
     }
   };
 

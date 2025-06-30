@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { handleApiResponse, handleApiError } from "../utils/apiUtils";
 import { useUser } from "../context/UserContext";
 
 export default function useTecnicos() {
@@ -11,10 +11,9 @@ export default function useTecnicos() {
       const res = await fetch(url, {
         headers: getAuthHeaders()
       });
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      return handleApiError(err);
     }
   };
 
@@ -24,10 +23,9 @@ export default function useTecnicos() {
       const res = await fetch(url, {
         headers: getAuthHeaders()
       });
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      return handleApiError(err);
     }
   };
 
@@ -43,13 +41,10 @@ export default function useTecnicos() {
           telefono: tecnico.telefono
         })
       });
-      if (!res.ok) throw new Error("Error al agregar técnico");
-      toast.success("Técnico agregado correctamente");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      toast.error("Error al agregar el técnico");
-      return false;
+      return handleApiError(err);
     }
   };
 
@@ -65,13 +60,10 @@ export default function useTecnicos() {
           telefono: tecnico.telefono
         })
       });
-      if (!res.ok) throw new Error("Error al editar técnico");
-      toast.success("Técnico editado correctamente");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      toast.error("Error al editar el técnico");
-      return false;
+      return handleApiError(err);
     }
   };
 
@@ -81,11 +73,10 @@ export default function useTecnicos() {
         method: "DELETE",
         headers: getAuthHeaders()
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      return false;
+      return handleApiError(err);
     }
   };
 

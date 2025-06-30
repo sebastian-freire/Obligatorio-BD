@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { handleApiResponse, handleApiError } from "../utils/apiUtils";
 
 export default function useMantenimientos() {
   const apiUrl = import.meta.env.VITE_API_ENDPOINT;
@@ -45,26 +45,10 @@ export default function useMantenimientos() {
         })
       });
 
-      const responseData = await res.json();
-
-      if (!res.ok) {
-        // Usar mensaje del servidor para errores
-        const errorMessage =
-          responseData.error ||
-          responseData.message ||
-          `Error ${res.status}: ${res.statusText}`;
-        throw new Error(errorMessage);
-      }
-
-      // Usar mensaje del servidor para éxito
-      const successMessage = responseData.message;
-      toast.success(successMessage);
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      const errorMsg = err.message;
-      toast.error(errorMsg);
-      return false;
+      return handleApiError(err);
     }
   };
 
@@ -86,12 +70,11 @@ export default function useMantenimientos() {
           observaciones: mantenimiento.observaciones
         })
       });
-      if (!res.ok) throw new Error("Error al editar mantenimiento");
-      toast.success("Mantenimiento editado correctamente");
+
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      toast.error("Error al editar mantenimiento");
+      return handleApiError(err);
     }
   };
 
@@ -103,11 +86,11 @@ export default function useMantenimientos() {
           "Content-Type": "application/json"
         }
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      return false;
+      return handleApiError(err);
     }
   };
 

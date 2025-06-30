@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { handleApiResponse, handleApiError } from "../utils/apiUtils";
 import { useUser } from "../context/UserContext";
 
 export default function useProveedores() {
@@ -11,10 +11,9 @@ export default function useProveedores() {
       const res = await fetch(url, {
         headers: getAuthHeaders()
       });
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      return handleApiError(err);
     }
   };
 
@@ -24,10 +23,9 @@ export default function useProveedores() {
       const res = await fetch(url, {
         headers: getAuthHeaders()
       });
-      const data = await res.json();
-      return data;
+      return await handleApiResponse(res);
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      return handleApiError(err);
     }
   };
 
@@ -41,13 +39,10 @@ export default function useProveedores() {
           contacto: proveedor.contacto
         })
       });
-      if (!res.ok) throw new Error("Error al agregar proveedor");
-      toast.success("Proveedor agregado correctamente");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      toast.error("Error al agregar el proveedor");
-      return false;
+      return handleApiError(err);
     }
   };
 
@@ -61,13 +56,10 @@ export default function useProveedores() {
           contacto: proveedor.contacto
         })
       });
-      if (!res.ok) throw new Error("Error al editar proveedor");
-      toast.success("Proveedor editado correctamente");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      toast.error("Error al editar el proveedor");
-      return false;
+      return handleApiError(err);
     }
   };
 
@@ -77,11 +69,10 @@ export default function useProveedores() {
         method: "DELETE",
         headers: getAuthHeaders()
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+      await handleApiResponse(res);
       return true;
     } catch (err) {
-      console.error(err);
-      return false;
+      return handleApiError(err);
     }
   };
 
