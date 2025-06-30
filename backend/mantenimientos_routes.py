@@ -18,23 +18,37 @@ def obtener_mantenimientos():
 @mantenimientos_bp.route("/mantenimientos", methods=["POST"])
 def crear_mantenimiento():
     try:
-        data = request.json
-        id_maquina = data.get("id_maquina")
-        ci_tecnico = data.get("ci_tecnico")
-        tipo = data.get("tipo")
-        fecha = data.get("fecha")
-        observaciones = data.get("observaciones")
+        data = request.get_json()
+        ci_tecnico = data.get('ci_tecnico')
+        id_maquina = data.get('id_maquina')
+        
         conn = get_connection()
         cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO mantenimientos (id_maquina, ci_tecnico, tipo, fecha, observaciones) VALUES (%s, %s, %s, %s, %s)",
-            (id_maquina, ci_tecnico, tipo, fecha, observaciones)
-        )
+        
+        # Verificar si el técnico existe
+        cursor.execute("SELECT ci FROM tecnicos WHERE ci = %s", (ci_tecnico,))
+        if not cursor.fetchone():
+            return jsonify({"error": "El técnico con CI {} no existe".format(ci_tecnico)}), 400
+            
+        # Verificar si la máquina existe
+        cursor.execute("SELECT id FROM maquinas WHERE id = %s", (id_maquina,))
+        if not cursor.fetchone():
+            return jsonify({"error": "La máquina con ID {} no existe".format(id_maquina)}), 400
+            
+        # Insertar mantenimiento
+        cursor.execute("""
+            INSERT INTO mantenimientos (id_maquina, ci_tecnico, tipo, fecha, observaciones)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (id_maquina, ci_tecnico, data['tipo'], data['fecha'], data['observaciones']))
+        
         conn.commit()
-        conn.close()
-        return jsonify({"mensaje": "Mantenimiento creado"}), 201
+        return jsonify({"message": "Mantenimiento creado exitosamente"}), 201
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
 @mantenimientos_bp.route("/mantenimientos/<int:id>", methods=["PATCH"])
 def modificar_mantenimiento(id):

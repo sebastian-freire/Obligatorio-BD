@@ -28,7 +28,6 @@ export default function useMantenimientos() {
   const agregarMantenimiento = async (nuevoMantenimiento) => {
     try {
       // Convertir fecha a formato ISO ajustado a la zona horaria
-      // Sin esto manda las cosas a la base de datos con 3 horas menos
       const fecha = new Date(nuevoMantenimiento.fecha);
       const fechaAjustada = fecha.toISOString().slice(0, 19).replace("T", " ");
 
@@ -45,11 +44,27 @@ export default function useMantenimientos() {
           observaciones: nuevoMantenimiento.observaciones
         })
       });
-      if (!res.ok) throw new Error("Error al agregar post");
-      toast.success("Mantenimiento agregado correctamente");
+
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        // Usar mensaje del servidor para errores
+        const errorMessage =
+          responseData.error ||
+          responseData.message ||
+          `Error ${res.status}: ${res.statusText}`;
+        throw new Error(errorMessage);
+      }
+
+      // Usar mensaje del servidor para éxito
+      const successMessage = responseData.message;
+      toast.success(successMessage);
       return true;
     } catch (err) {
       console.error(err);
+      const errorMsg = err.message;
+      toast.error(errorMsg);
+      return false;
     }
   };
 

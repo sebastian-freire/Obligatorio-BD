@@ -64,14 +64,16 @@ export default function AgregarMantenimientos({ onCancel }) {
       />
       <div className="form-buttons">
         <button
-          onClick={() => {
-            agregarMantenimiento({
+          onClick={async () => {
+            const success = await agregarMantenimiento({
               ...mantenimiento,
               id_maquina: Number(mantenimiento.id_maquina),
               fecha: mantenimiento.fecha.replace("T", " ") + ":00"
             });
-            // Después de agregar exitosamente, volver a la lista
-            if (onCancel) onCancel();
+            // Solo cerrar si fue exitoso
+            if (success && onCancel) {
+              onCancel();
+            }
           }}
         >
           Agregar Mantenimiento
