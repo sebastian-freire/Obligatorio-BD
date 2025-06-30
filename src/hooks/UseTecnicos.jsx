@@ -59,6 +59,7 @@ export default function useTecnicos() {
         method: "PATCH",
         headers: getAuthHeaders(),
         body: JSON.stringify({
+          ci: tecnico.ci,
           nombre: tecnico.nombre,
           apellido: tecnico.apellido,
           telefono: tecnico.telefono
