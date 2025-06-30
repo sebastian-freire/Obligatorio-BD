@@ -5,7 +5,6 @@ import "../../styles/sharedStyles.css";
 
 export default function EditarTecnico({ tecnicoId, onCancel }) {
   const [tecnico, setTecnico] = useState({
-    ci: "",
     nombre: "",
     apellido: "",
     telefono: ""
@@ -23,27 +22,22 @@ export default function EditarTecnico({ tecnicoId, onCancel }) {
 
   useEffect(() => {
     if (tecnicoId) {
-      fetchTecnico(tecnicoId)
-        .then((data) => {
-          if (data) {
-            setTecnico(data);
-          } else {
-            toast.error("Error al cargar los datos del técnico");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
+      fetchTecnico(tecnicoId).then((data) => {
+        if (data) {
+          setTecnico(data);
+        } else {
           toast.error("Error al cargar los datos del técnico");
-        });
+          if (onCancel) onCancel();
+        }
+      });
     }
-  }, [tecnicoId, fetchTecnico]);
+  }, [tecnicoId]);
 
   const handleEditar = async () => {
     if (
-      !tecnico.ci ||
-      !tecnico.nombre ||
-      !tecnico.apellido ||
-      !tecnico.telefono
+      tecnico.nombre.trim() === "" ||
+      tecnico.apellido.trim() === "" ||
+      tecnico.telefono.trim() === ""
     ) {
       toast.error("Por favor, complete todos los campos obligatorios.");
       return;
@@ -58,15 +52,6 @@ export default function EditarTecnico({ tecnicoId, onCancel }) {
   return (
     <div className="agregar-cliente-container">
       <h1>Editar Técnico</h1>
-      <input
-        type="text"
-        placeholder="Cédula de Identidad"
-        name="ci"
-        value={tecnico.ci || ""}
-        maxLength={8}
-        onChange={handleChange}
-        disabled
-      />
       <input
         type="text"
         placeholder="Nombre"

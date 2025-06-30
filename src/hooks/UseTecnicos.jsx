@@ -43,11 +43,13 @@ export default function useTecnicos() {
           telefono: tecnico.telefono
         })
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+      if (!res.ok) throw new Error("Error al agregar técnico");
       toast.success("Técnico agregado correctamente");
       return true;
     } catch (err) {
       console.error(err);
+      toast.error("Error al agregar el técnico");
+      return false;
     }
   };
 
@@ -57,17 +59,18 @@ export default function useTecnicos() {
         method: "PATCH",
         headers: getAuthHeaders(),
         body: JSON.stringify({
-          ci: tecnico.ci,
           nombre: tecnico.nombre,
           apellido: tecnico.apellido,
           telefono: tecnico.telefono
         })
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+      if (!res.ok) throw new Error("Error al editar técnico");
       toast.success("Técnico editado correctamente");
       return true;
     } catch (err) {
       console.error(err);
+      toast.error("Error al editar el técnico");
+      return false;
     }
   };
 

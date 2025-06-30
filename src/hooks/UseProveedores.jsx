@@ -38,16 +38,16 @@ export default function useProveedores() {
         headers: getAuthHeaders(),
         body: JSON.stringify({
           nombre: proveedor.nombre,
-          telefono: proveedor.telefono,
-          correo: proveedor.correo,
-          direccion: proveedor.direccion
+          contacto: proveedor.contacto
         })
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+      if (!res.ok) throw new Error("Error al agregar proveedor");
       toast.success("Proveedor agregado correctamente");
       return true;
     } catch (err) {
       console.error(err);
+      toast.error("Error al agregar el proveedor");
+      return false;
     }
   };
 
@@ -58,16 +58,16 @@ export default function useProveedores() {
         headers: getAuthHeaders(),
         body: JSON.stringify({
           nombre: proveedor.nombre,
-          telefono: proveedor.telefono,
-          correo: proveedor.correo,
-          direccion: proveedor.direccion
+          contacto: proveedor.contacto
         })
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+      if (!res.ok) throw new Error("Error al editar proveedor");
       toast.success("Proveedor editado correctamente");
       return true;
     } catch (err) {
       console.error(err);
+      toast.error("Error al editar el proveedor");
+      return false;
     }
   };
 

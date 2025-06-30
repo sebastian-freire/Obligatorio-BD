@@ -17,6 +17,23 @@ def obtener_tecnicos():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Obtener un técnico específico por CI
+@tecnicos_bp.route("/tecnicos/<ci>", methods=["GET"])
+@require_admin
+def obtener_tecnico(ci):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM tecnicos WHERE ci = %s", (ci,))
+        tecnico = cursor.fetchone()
+        conn.close()
+        if tecnico:
+            return jsonify(tecnico)
+        else:
+            return jsonify({"error": "Técnico no encontrado"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @tecnicos_bp.route("/tecnicos", methods=["POST"])
 @require_admin
 def crear_tecnico():

@@ -76,16 +76,14 @@ function ListaProveedores({ onAgregarClick, onEditarClick }) {
           <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Teléfono</th>
-            <th>Correo</th>
-            <th>Dirección</th>
+            <th>Contacto</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {proveedores.length === 0 ? (
             <tr>
-              <td colSpan="6" style={{ textAlign: "center", padding: "40px" }}>
+              <td colSpan="4" style={{ textAlign: "center", padding: "40px" }}>
                 No hay proveedores registrados
               </td>
             </tr>
@@ -94,9 +92,7 @@ function ListaProveedores({ onAgregarClick, onEditarClick }) {
               <tr key={proveedor.id}>
                 <td>{proveedor.id}</td>
                 <td>{proveedor.nombre}</td>
-                <td>{proveedor.telefono}</td>
-                <td>{proveedor.correo}</td>
-                <td>{proveedor.direccion}</td>
+                <td>{proveedor.contacto}</td>
                 <td>
                   <div className="dropdown">
                     <button

@@ -21,23 +21,19 @@ export default function EditarProveedor({ proveedorId, onCancel }) {
 
   useEffect(() => {
     if (proveedorId) {
-      fetchProveedor(proveedorId)
-        .then((data) => {
-          if (data) {
-            setProveedor(data);
-          } else {
-            toast.error("Error al cargar los datos del proveedor");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
+      fetchProveedor(proveedorId).then((data) => {
+        if (data) {
+          setProveedor(data);
+        } else {
           toast.error("Error al cargar los datos del proveedor");
-        });
+          if (onCancel) onCancel();
+        }
+      });
     }
-  }, [proveedorId, fetchProveedor]);
+  }, [proveedorId]);
 
   const handleEditar = async () => {
-    if (!proveedor.nombre || !proveedor.contacto) {
+    if (proveedor.nombre.trim() === "" || proveedor.contacto.trim() === "") {
       toast.error("Por favor, complete todos los campos obligatorios.");
       return;
     }

@@ -58,24 +58,25 @@ export default function useMaquinas() {
     }
   };
 
-  const editarMaquina = async (maquina) => {
+  const editarMaquina = async (id, maquina) => {
     try {
-      const res = await fetch(`${apiUrl}/maquinas/${maquina.id}`, {
+      const res = await fetch(`${apiUrl}/maquinas/${id}`, {
         method: "PATCH",
         headers: getAuthHeaders(),
         body: JSON.stringify({
-          id: maquina.id,
           modelo: maquina.modelo,
           id_cliente: maquina.id_cliente,
           ubicacion_maquina: maquina.ubicacion_maquina,
           costo_alquiler_mensual: maquina.costo_alquiler_mensual
         })
       });
+      if (!res.ok) throw new Error("Error al editar máquina");
       toast.success("Maquina editada correctamente");
-      if (!res.ok) throw new Error("Error al agregar post");
       return true;
     } catch (err) {
       console.error(err);
+      toast.error("Error al editar la máquina");
+      return false;
     }
   };
 
@@ -91,11 +92,13 @@ export default function useMaquinas() {
           costo_alquiler_mensual: maquina.costo_alquiler_mensual
         })
       });
-      if (!res.ok) throw new Error("Error al agregar post");
+      if (!res.ok) throw new Error("Error al agregar máquina");
       toast.success("Maquina agregada correctamente");
       return true;
     } catch (err) {
       console.error(err);
+      toast.error("Error al agregar la máquina");
+      return false;
     }
   };
 

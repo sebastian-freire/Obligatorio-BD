@@ -23,27 +23,23 @@ export default function EditarMaquina({ maquinaId, onCancel }) {
 
   useEffect(() => {
     if (maquinaId) {
-      fetchMaquinaById(maquinaId)
-        .then((data) => {
-          if (data) {
-            setMaquina(data);
-          } else {
-            toast.error("Error al cargar los datos de la máquina");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
+      fetchMaquinaById(maquinaId).then((data) => {
+        if (data) {
+          setMaquina(data);
+        } else {
           toast.error("Error al cargar los datos de la máquina");
-        });
+          if (onCancel) onCancel();
+        }
+      });
     }
-  }, [maquinaId, fetchMaquinaById]);
+  }, [maquinaId]);
 
   const handleEditar = async () => {
     if (
-      !maquina.modelo ||
-      !maquina.id_cliente ||
-      !maquina.ubicacion_maquina ||
-      !maquina.costo_alquiler_mensual
+      maquina.modelo.trim() === "" ||
+      maquina.id_cliente.toString().trim() === "" ||
+      maquina.ubicacion_maquina.trim() === "" ||
+      maquina.costo_alquiler_mensual.toString().trim() === ""
     ) {
       toast.error("Por favor, complete todos los campos obligatorios.");
       return;

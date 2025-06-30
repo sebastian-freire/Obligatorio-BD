@@ -19,14 +19,17 @@ def obtener_maquinas():
     
 @maquinas_bp.route("/maquinas/<int:id>", methods=["GET"])
 @require_admin
-def obtener_maquina():
+def obtener_maquina(id):
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM maquinas WHERE id = %s", (id,))
-        maquinas = cursor.fetchall()
+        maquina = cursor.fetchone()
         conn.close()
-        return jsonify(maquinas)
+        if maquina:
+            return jsonify(maquina)
+        else:
+            return jsonify({"error": "Máquina no encontrada"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     

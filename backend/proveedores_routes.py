@@ -18,6 +18,23 @@ def obtener_proveedores():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Obtener un proveedor específico por ID
+@proveedores_bp.route("/proveedores/<int:id>", methods=["GET"])
+@require_admin
+def obtener_proveedor(id):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM proveedores WHERE id = %s", (id,))
+        proveedor = cursor.fetchone()
+        conn.close()
+        if proveedor:
+            return jsonify(proveedor)
+        else:
+            return jsonify({"error": "Proveedor no encontrado"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Crear un nuevo proveedor
 @proveedores_bp.route("/proveedores", methods=["POST"])
 @require_admin
