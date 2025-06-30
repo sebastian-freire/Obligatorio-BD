@@ -31,20 +31,12 @@ function ListaTecnicos({ onAgregarClick, onEditarClick }) {
 
   useEffect(() => {
     cargarTecnicos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleEliminar = async (tecnicoCI) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este técnico?")) {
-      try {
-        await eliminarTecnico(tecnicoCI);
-        toast.success("Técnico eliminado correctamente");
-        cargarTecnicos();
-      } catch (error) {
-        console.error("Error eliminando técnico:", error);
-        toast.error("Error al eliminar el técnico");
-      }
-      setOpen(null);
-    }
+  const handleDropdownClick = (e, tecnicoCI) => {
+    e.stopPropagation(); // Evitar que se cierre inmediatamente
+    setOpen(open === tecnicoCI ? null : tecnicoCI);
   };
 
   if (loading) {
@@ -76,7 +68,7 @@ function ListaTecnicos({ onAgregarClick, onEditarClick }) {
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Teléfono</th>
-            <th></th>
+            <th>✏️</th>
           </tr>
         </thead>
         <tbody>
@@ -93,25 +85,72 @@ function ListaTecnicos({ onAgregarClick, onEditarClick }) {
                 <td>{tecnico.nombre}</td>
                 <td>{tecnico.apellido}</td>
                 <td>{tecnico.telefono}</td>
-                <td>
+                <td style={{ position: "relative" }}>
                   <div className="dropdown">
                     <button
                       className="dots-button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setOpen(open === tecnico.ci ? null : tecnico.ci);
-                      }}
+                      onClick={(e) => handleDropdownClick(e, tecnico.ci)}
                     >
                       ⋮
                     </button>
                     {open === tecnico.ci && (
                       <div className="dropdown-content">
-                        <button onClick={() => onEditarClick(tecnico.ci)}>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            if (onEditarClick) onEditarClick(tecnico.ci);
+                          }}
+                        >
                           Editar
                         </button>
                         <button
-                          className="delete-button"
-                          onClick={() => handleEliminar(tecnico.ci)}
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            toast.custom(
+                              (t) => {
+                                return (
+                                  <div key={t.id} className="toast-custom">
+                                    <p>
+                                      ¿Estás seguro de eliminar este técnico?
+                                    </p>
+                                    <div className="toast-buttons">
+                                      <button
+                                        className="cancel-button"
+                                        onClick={() => toast.dismiss(t.id)}
+                                      >
+                                        Cancelar
+                                      </button>
+                                      <button
+                                        className="delete-button"
+                                        onClick={() => {
+                                          toast.remove(t.id);
+                                          eliminarTecnico(tecnico.ci).then(
+                                            (data) => {
+                                              cargarTecnicos();
+                                              if (data) {
+                                                const successToast =
+                                                  toast.success(
+                                                    "Técnico eliminado correctamente"
+                                                  );
+                                                setTimeout(() => {
+                                                  toast.dismiss(successToast);
+                                                }, 2000);
+                                              }
+                                            }
+                                          );
+                                        }}
+                                      >
+                                        Eliminar
+                                      </button>
+                                    </div>
+                                  </div>
+                                );
+                              },
+                              { duration: Infinity }
+                            );
+                          }}
                         >
                           Eliminar
                         </button>

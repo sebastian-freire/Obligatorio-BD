@@ -31,22 +31,12 @@ function ListaProveedores({ onAgregarClick, onEditarClick }) {
 
   useEffect(() => {
     cargarProveedores();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleEliminar = async (proveedorId) => {
-    if (
-      window.confirm("¿Estás seguro de que quieres eliminar este proveedor?")
-    ) {
-      try {
-        await eliminarProveedor(proveedorId);
-        toast.success("Proveedor eliminado correctamente");
-        cargarProveedores();
-      } catch (error) {
-        console.error("Error eliminando proveedor:", error);
-        toast.error("Error al eliminar el proveedor");
-      }
-      setOpen(null);
-    }
+  const handleDropdownClick = (e, proveedorId) => {
+    e.stopPropagation(); // Evitar que se cierre inmediatamente
+    setOpen(open === proveedorId ? null : proveedorId);
   };
 
   if (loading) {
@@ -77,7 +67,7 @@ function ListaProveedores({ onAgregarClick, onEditarClick }) {
             <th>ID</th>
             <th>Nombre</th>
             <th>Contacto</th>
-            <th></th>
+            <th>✏️</th>
           </tr>
         </thead>
         <tbody>
@@ -93,25 +83,72 @@ function ListaProveedores({ onAgregarClick, onEditarClick }) {
                 <td>{proveedor.id}</td>
                 <td>{proveedor.nombre}</td>
                 <td>{proveedor.contacto}</td>
-                <td>
+                <td style={{ position: "relative" }}>
                   <div className="dropdown">
                     <button
                       className="dots-button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setOpen(open === proveedor.id ? null : proveedor.id);
-                      }}
+                      onClick={(e) => handleDropdownClick(e, proveedor.id)}
                     >
                       ⋮
                     </button>
                     {open === proveedor.id && (
                       <div className="dropdown-content">
-                        <button onClick={() => onEditarClick(proveedor.id)}>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            if (onEditarClick) onEditarClick(proveedor.id);
+                          }}
+                        >
                           Editar
                         </button>
                         <button
-                          className="delete-button"
-                          onClick={() => handleEliminar(proveedor.id)}
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            toast.custom(
+                              (t) => {
+                                return (
+                                  <div key={t.id} className="toast-custom">
+                                    <p>
+                                      ¿Estás seguro de eliminar este proveedor?
+                                    </p>
+                                    <div className="toast-buttons">
+                                      <button
+                                        className="cancel-button"
+                                        onClick={() => toast.dismiss(t.id)}
+                                      >
+                                        Cancelar
+                                      </button>
+                                      <button
+                                        className="delete-button"
+                                        onClick={() => {
+                                          toast.remove(t.id);
+                                          eliminarProveedor(proveedor.id).then(
+                                            (data) => {
+                                              cargarProveedores();
+                                              if (data) {
+                                                const successToast =
+                                                  toast.success(
+                                                    "Proveedor eliminado correctamente"
+                                                  );
+                                                setTimeout(() => {
+                                                  toast.dismiss(successToast);
+                                                }, 2000);
+                                              }
+                                            }
+                                          );
+                                        }}
+                                      >
+                                        Eliminar
+                                      </button>
+                                    </div>
+                                  </div>
+                                );
+                              },
+                              { duration: Infinity }
+                            );
+                          }}
                         >
                           Eliminar
                         </button>

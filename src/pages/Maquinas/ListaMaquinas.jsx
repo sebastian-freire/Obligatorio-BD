@@ -31,20 +31,12 @@ function ListaMaquinas({ onAgregarClick, onEditarClick }) {
 
   useEffect(() => {
     cargarMaquinas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleEliminar = async (maquinaId) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar esta máquina?")) {
-      try {
-        await eliminarMaquina(maquinaId);
-        toast.success("Máquina eliminada correctamente");
-        cargarMaquinas();
-      } catch (error) {
-        console.error("Error eliminando máquina:", error);
-        toast.error("Error al eliminar la máquina");
-      }
-      setOpen(null);
-    }
+  const handleDropdownClick = (e, maquinaId) => {
+    e.stopPropagation(); // Evitar que se cierre inmediatamente
+    setOpen(open === maquinaId ? null : maquinaId);
   };
 
   if (loading) {
@@ -77,7 +69,7 @@ function ListaMaquinas({ onAgregarClick, onEditarClick }) {
             <th>ID Cliente</th>
             <th>Ubicación</th>
             <th>Costo Alquiler Mensual</th>
-            <th></th>
+            <th>✏️</th>
           </tr>
         </thead>
         <tbody>
@@ -95,25 +87,72 @@ function ListaMaquinas({ onAgregarClick, onEditarClick }) {
                 <td>{maquina.id_cliente}</td>
                 <td>{maquina.ubicacion_maquina}</td>
                 <td>${maquina.costo_alquiler_mensual}</td>
-                <td>
+                <td style={{ position: "relative" }}>
                   <div className="dropdown">
                     <button
                       className="dots-button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setOpen(open === maquina.id ? null : maquina.id);
-                      }}
+                      onClick={(e) => handleDropdownClick(e, maquina.id)}
                     >
                       ⋮
                     </button>
                     {open === maquina.id && (
                       <div className="dropdown-content">
-                        <button onClick={() => onEditarClick(maquina.id)}>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            if (onEditarClick) onEditarClick(maquina.id);
+                          }}
+                        >
                           Editar
                         </button>
                         <button
-                          className="delete-button"
-                          onClick={() => handleEliminar(maquina.id)}
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            toast.custom(
+                              (t) => {
+                                return (
+                                  <div key={t.id} className="toast-custom">
+                                    <p>
+                                      ¿Estás seguro de eliminar esta máquina?
+                                    </p>
+                                    <div className="toast-buttons">
+                                      <button
+                                        className="cancel-button"
+                                        onClick={() => toast.dismiss(t.id)}
+                                      >
+                                        Cancelar
+                                      </button>
+                                      <button
+                                        className="delete-button"
+                                        onClick={() => {
+                                          toast.remove(t.id);
+                                          eliminarMaquina(maquina.id).then(
+                                            (data) => {
+                                              cargarMaquinas();
+                                              if (data) {
+                                                const successToast =
+                                                  toast.success(
+                                                    "Máquina eliminada correctamente"
+                                                  );
+                                                setTimeout(() => {
+                                                  toast.dismiss(successToast);
+                                                }, 2000);
+                                              }
+                                            }
+                                          );
+                                        }}
+                                      >
+                                        Eliminar
+                                      </button>
+                                    </div>
+                                  </div>
+                                );
+                              },
+                              { duration: Infinity }
+                            );
+                          }}
                         >
                           Eliminar
                         </button>
