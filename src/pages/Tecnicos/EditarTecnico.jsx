@@ -44,9 +44,7 @@ export default function EditarTecnico({ tecnicoId, onCancel }) {
     }
 
     const resultado = await editarTecnico(tecnicoId, tecnico);
-    if (resultado) {
-      if (onCancel) onCancel();
-    }
+    if (resultado && onCancel) onCancel();
   };
 
   return (

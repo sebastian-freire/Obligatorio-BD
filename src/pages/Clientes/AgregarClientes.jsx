@@ -57,7 +57,7 @@ export default function AgregarCliente({ onCancel }) {
       />
       <div className="form-buttons">
         <button
-          onClick={() => {
+          onClick={async () => {
             if (
               nuevoCliente.nombre.trim() === "" ||
               nuevoCliente.telefono.trim() === "" ||
@@ -67,10 +67,10 @@ export default function AgregarCliente({ onCancel }) {
               toast.error("Por favor, complete todos los campos obligatorios.");
               return;
             }
-            console.log(nuevoCliente);
-            agregarCliente(nuevoCliente);
+            const resultado = await agregarCliente(nuevoCliente);
+            console.log(resultado);
             // Después de agregar exitosamente, volver a la lista
-            if (onCancel) onCancel();
+            if (resultado && onCancel)  onCancel();
           }}
         >
           Agregar Cliente

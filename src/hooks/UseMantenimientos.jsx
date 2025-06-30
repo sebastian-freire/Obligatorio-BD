@@ -10,7 +10,8 @@ export default function useMantenimientos() {
       const data = await res.json();
       return data;
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -21,7 +22,8 @@ export default function useMantenimientos() {
       const data = await res.json();
       return data;
     } catch (err) {
-      console.error("Failed to fetch:", err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -48,7 +50,8 @@ export default function useMantenimientos() {
       await handleApiResponse(res);
       return true;
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -74,7 +77,8 @@ export default function useMantenimientos() {
       await handleApiResponse(res);
       return true;
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 

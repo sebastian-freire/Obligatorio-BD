@@ -11,15 +11,9 @@ function ListaMaquinas({ onAgregarClick, onEditarClick }) {
 
   const cargarMaquinas = async () => {
     setLoading(true);
-    try {
-      const data = await fetchMaquinas();
-      setMaquinas(data || []);
-    } catch (error) {
-      console.error("Error cargando máquinas:", error);
-      toast.error("Error al cargar la lista de máquinas");
-    } finally {
-      setLoading(false);
-    }
+    const data = await fetchMaquinas();
+    setMaquinas(data || []);
+    setLoading(false);
   };
 
   // Cerrar dropdown al hacer click fuera
@@ -129,17 +123,8 @@ function ListaMaquinas({ onAgregarClick, onEditarClick }) {
                                         onClick={() => {
                                           toast.remove(t.id);
                                           eliminarMaquina(maquina.id).then(
-                                            (data) => {
+                                            () => {
                                               cargarMaquinas();
-                                              if (data) {
-                                                const successToast =
-                                                  toast.success(
-                                                    "Máquina eliminada correctamente"
-                                                  );
-                                                setTimeout(() => {
-                                                  toast.dismiss(successToast);
-                                                }, 2000);
-                                              }
                                             }
                                           );
                                         }}

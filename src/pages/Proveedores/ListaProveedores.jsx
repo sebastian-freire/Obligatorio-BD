@@ -11,15 +11,9 @@ function ListaProveedores({ onAgregarClick, onEditarClick }) {
 
   const cargarProveedores = async () => {
     setLoading(true);
-    try {
-      const data = await fetchProveedores();
-      setProveedores(data || []);
-    } catch (error) {
-      console.error("Error cargando proveedores:", error);
-      toast.error("Error al cargar la lista de proveedores");
-    } finally {
-      setLoading(false);
-    }
+    const data = await fetchProveedores();
+    setProveedores(data || []);
+    setLoading(false);
   };
 
   // Cerrar dropdown al hacer click fuera
@@ -125,17 +119,8 @@ function ListaProveedores({ onAgregarClick, onEditarClick }) {
                                         onClick={() => {
                                           toast.remove(t.id);
                                           eliminarProveedor(proveedor.id).then(
-                                            (data) => {
+                                            () => {
                                               cargarProveedores();
-                                              if (data) {
-                                                const successToast =
-                                                  toast.success(
-                                                    "Proveedor eliminado correctamente"
-                                                  );
-                                                setTimeout(() => {
-                                                  toast.dismiss(successToast);
-                                                }, 2000);
-                                              }
                                             }
                                           );
                                         }}

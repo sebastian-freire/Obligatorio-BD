@@ -39,14 +39,14 @@ export default function AgregarProveedor({ onCancel }) {
       />
       <div className="form-buttons">
         <button
-          onClick={() => {
-            if (!nuevoProveedor.nombre || !nuevoProveedor.contacto) {
+          onClick={async () => {
+            if (nuevoProveedor.nombre.trim() === "" || nuevoProveedor.contacto.trim() === "") {
               toast.error("Por favor, complete todos los campos.");
               return;
             }
-            agregarProveedor(nuevoProveedor);
+            const response = await agregarProveedor(nuevoProveedor);
             // Después de agregar exitosamente, volver a la lista
-            if (onCancel) onCancel();
+            if (response && onCancel) onCancel();
           }}
         >
           Agregar Proveedor

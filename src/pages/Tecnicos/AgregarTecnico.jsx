@@ -57,19 +57,19 @@ export default function AgregarTecnico({ onCancel }) {
       />
       <div className="form-buttons">
         <button
-          onClick={() => {
+          onClick={async () => {
             if (
-              !nuevoTecnico.ci ||
-              !nuevoTecnico.nombre ||
-              !nuevoTecnico.apellido ||
-              !nuevoTecnico.telefono
+              nuevoTecnico.ci.trim() === "" ||
+              nuevoTecnico.nombre.trim() === "" ||
+              nuevoTecnico.apellido.trim() === "" ||
+              nuevoTecnico.telefono.trim() === ""
             ) {
               toast.error("Por favor, complete todos los campos.");
               return;
             }
-            agregarTecnico(nuevoTecnico);
+            const response = await agregarTecnico(nuevoTecnico);
             // Después de agregar exitosamente, volver a la lista
-            if (onCancel) onCancel();
+            if (response && onCancel) onCancel();
           }}
         >
           Agregar Técnico

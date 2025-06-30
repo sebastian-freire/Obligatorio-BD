@@ -1,5 +1,7 @@
 import { useState } from "react"; // Import useState
 import useMantenimientos from "../../hooks/UseMantenimientos";
+import "../../styles/sharedStyles.css";
+import toast from "react-hot-toast";
 
 export default function AgregarMantenimientos({ onCancel }) {
   const { agregarMantenimiento } = useMantenimientos();
@@ -65,13 +67,23 @@ export default function AgregarMantenimientos({ onCancel }) {
       <div className="form-buttons">
         <button
           onClick={async () => {
-            const success = await agregarMantenimiento({
+            if (
+              mantenimiento.fecha.trim() === "" ||
+              mantenimiento.id_maquina.trim() === "" ||
+              mantenimiento.ci_tecnico.trim() === "" ||
+              mantenimiento.tipo.trim() === "" 
+            ) {
+              toast.error("Por favor, complete todos los campos.");
+              return;
+            }
+
+            const response = await agregarMantenimiento({
               ...mantenimiento,
               id_maquina: Number(mantenimiento.id_maquina),
               fecha: mantenimiento.fecha.replace("T", " ") + ":00"
             });
             // Solo cerrar si fue exitoso
-            if (success && onCancel) {
+            if (response && onCancel) {
               onCancel();
             }
           }}

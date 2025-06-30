@@ -55,19 +55,19 @@ export default function AgregarInsumo({ onCancel }) {
       />
       <div className="form-buttons">
         <button
-          onClick={() => {
+          onClick={async () => {
             if (
-              !nuevoInsumo.descripcion ||
-              !nuevoInsumo.tipo ||
-              !nuevoInsumo.precio_unitario ||
-              !nuevoInsumo.id_proveedor
+              nuevoInsumo.descripcion.trim() === "" ||
+              nuevoInsumo.tipo.trim() === "" ||
+              nuevoInsumo.precio_unitario.trim() === "" ||
+              nuevoInsumo.id_proveedor.trim() === ""
             ) {
               toast.error("Por favor, complete todos los campos.");
               return;
             }
-            agregarInsumo(nuevoInsumo);
+            const response = await agregarInsumo(nuevoInsumo);
             // Después de agregar exitosamente, volver a la lista
-            if (onCancel) onCancel();
+            if (response && onCancel) onCancel();
           }}
         >
           Agregar Insumo

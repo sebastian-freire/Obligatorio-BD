@@ -27,7 +27,6 @@ export default function EditarCliente({ clienteId, onCancel }) {
         if (data) {
           setCliente(data);
         } else {
-          toast.error("Error al cargar los datos del cliente");
           if (onCancel) onCancel();
         }
       });
@@ -46,9 +45,7 @@ export default function EditarCliente({ clienteId, onCancel }) {
     }
 
     const resultado = await editarCliente(clienteId, cliente);
-    if (resultado) {
-      if (onCancel) onCancel();
-    }
+    if (resultado && onCancel)  onCancel();
   };
 
   return (
