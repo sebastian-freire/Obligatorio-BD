@@ -11,15 +11,9 @@ function ListaMantenimientos({ onAgregarClick, onEditarClick }) {
 
   const cargarMantenimientos = async () => {
     setLoading(true);
-    try {
-      const data = await fetchMantenimientos();
-      setMantenimientos(data);
-    } catch (error) {
-      console.error("Error cargando mantenimientos:", error);
-      toast.error("Error al cargar la lista de mantenimientos");
-    } finally {
-      setLoading(false);
-    }
+    const data = await fetchMantenimientos();
+    setMantenimientos(data);
+    setLoading(false);
   };
 
   // Cerrar dropdown al hacer click fuera
@@ -137,17 +131,8 @@ function ListaMantenimientos({ onAgregarClick, onEditarClick }) {
                                           toast.remove(t.id);
                                           eliminarMantenimiento(
                                             mantenimiento.id
-                                          ).then((data) => {
+                                          ).then(() => {
                                             cargarMantenimientos();
-                                            if (data) {
-                                              const successToast =
-                                                toast.success(
-                                                  "Mantenimiento eliminado correctamente"
-                                                );
-                                              setTimeout(() => {
-                                                toast.dismiss(successToast);
-                                              }, 2000);
-                                            }
                                           });
                                         }}
                                       >

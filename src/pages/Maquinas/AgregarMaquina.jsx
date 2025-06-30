@@ -57,19 +57,20 @@ export default function AgregarMaquina({ onCancel }) {
       />
       <div className="form-buttons">
         <button
-          onClick={() => {
+          onClick={ async () => {
+            console.log(nuevaMaquina.costo_alquiler_mensual);
             if (
-              !nuevaMaquina.modelo ||
-              !nuevaMaquina.id_cliente ||
-              !nuevaMaquina.ubicacion_maquina ||
-              !nuevaMaquina.costo_alquiler_mensual
+              nuevaMaquina.modelo.trim() === "" ||
+              nuevaMaquina.id_cliente.trim() === "" ||
+              nuevaMaquina.ubicacion_maquina.trim() === "" ||
+              nuevaMaquina.costo_alquiler_mensual.trim() === ""
             ) {
               toast.error("Por favor, complete todos los campos.");
               return;
             }
-            agregarMaquina(nuevaMaquina);
+            const response = await agregarMaquina(nuevaMaquina);
             // Después de agregar exitosamente, volver a la lista
-            if (onCancel) onCancel();
+            if (response && onCancel) onCancel();
           }}
         >
           Agregar Maquina

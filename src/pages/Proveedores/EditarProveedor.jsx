@@ -39,9 +39,7 @@ export default function EditarProveedor({ proveedorId, onCancel }) {
     }
 
     const resultado = await editarProveedor(proveedorId, proveedor);
-    if (resultado) {
-      if (onCancel) onCancel();
-    }
+    if (resultado && onCancel) onCancel();
   };
 
   return (

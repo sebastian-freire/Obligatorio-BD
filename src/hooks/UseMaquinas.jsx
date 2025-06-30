@@ -13,7 +13,8 @@ export default function useMaquinas() {
       });
       return await handleApiResponse(res);
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -25,7 +26,8 @@ export default function useMaquinas() {
       });
       return await handleApiResponse(res);
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -37,7 +39,8 @@ export default function useMaquinas() {
       });
       return await handleApiResponse(res);
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -50,7 +53,8 @@ export default function useMaquinas() {
       await handleApiResponse(res);
       return true;
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -69,7 +73,8 @@ export default function useMaquinas() {
       await handleApiResponse(res);
       return true;
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -88,7 +93,8 @@ export default function useMaquinas() {
       await handleApiResponse(res);
       return true;
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 

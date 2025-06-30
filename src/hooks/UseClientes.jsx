@@ -9,18 +9,19 @@ export default function useClientes() {
       const res = await fetch(url);
       return await handleApiResponse(res);
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
-  //lo uso?
-  const cargarClientes = async () => {
+  const fetchClientes = async () => {
     try {
       const url = `${apiUrl}/clientes`;
       const res = await fetch(url);
       return await handleApiResponse(res);
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -41,7 +42,8 @@ export default function useClientes() {
       await handleApiResponse(res);
       return true;
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -62,7 +64,8 @@ export default function useClientes() {
       await handleApiResponse(res);
       return true;
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -77,7 +80,8 @@ export default function useClientes() {
       await handleApiResponse(res);
       return true;
     } catch (err) {
-      return handleApiError(err);
+      await handleApiError(err);
+      return false;
     }
   };
 
@@ -86,6 +90,6 @@ export default function useClientes() {
     editarCliente,
     fetchCliente,
     eliminarCliente,
-    cargarClientes
+    fetchClientes
   };
 }

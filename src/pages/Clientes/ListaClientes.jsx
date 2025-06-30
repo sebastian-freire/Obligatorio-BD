@@ -8,21 +8,13 @@ function ListaClientes({ onAgregarClick, onEditarClick }) {
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(null);
-  const { eliminarCliente } = useClientes();
+  const { eliminarCliente, fetchClientes } = useClientes();
 
   const cargarClientes = async () => {
     setLoading(true);
-    try {
-      const res = await fetch(`${apiUrl}/clientes`);
-      if (!res.ok) throw new Error("Error al cargar clientes");
-      const data = await res.json();
-      setClientes(data);
-    } catch (error) {
-      console.error("Error cargando clientes:", error);
-      toast.error("Error al cargar la lista de clientes");
-    } finally {
-      setLoading(false);
-    }
+    const data = await fetchClientes();
+    setClientes(data);
+    setLoading(false);
   };
 
   // Cerrar dropdown al hacer click fuera
@@ -113,17 +105,8 @@ function ListaClientes({ onAgregarClick, onEditarClick }) {
                                         onClick={() => {
                                           toast.remove(t.id);
                                           eliminarCliente(cliente.id).then(
-                                            (data) => {
+                                            () => {
                                               cargarClientes();
-                                              if (data) {
-                                                const successToast =
-                                                  toast.success(
-                                                    "Cliente eliminado correctamente"
-                                                  );
-                                                setTimeout(() => {
-                                                  toast.dismiss(successToast);
-                                                }, 2000);
-                                              }
                                             }
                                           );
                                         }}

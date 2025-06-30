@@ -11,15 +11,9 @@ function ListaTecnicos({ onAgregarClick, onEditarClick }) {
 
   const cargarTecnicos = async () => {
     setLoading(true);
-    try {
-      const data = await fetchTecnicos();
-      setTecnicos(data || []);
-    } catch (error) {
-      console.error("Error cargando técnicos:", error);
-      toast.error("Error al cargar la lista de técnicos");
-    } finally {
-      setLoading(false);
-    }
+    const data = await fetchTecnicos();
+    setTecnicos(data || []);
+    setLoading(false);
   };
 
   // Cerrar dropdown al hacer click fuera
@@ -127,17 +121,8 @@ function ListaTecnicos({ onAgregarClick, onEditarClick }) {
                                         onClick={() => {
                                           toast.remove(t.id);
                                           eliminarTecnico(tecnico.ci).then(
-                                            (data) => {
+                                            () => {
                                               cargarTecnicos();
-                                              if (data) {
-                                                const successToast =
-                                                  toast.success(
-                                                    "Técnico eliminado correctamente"
-                                                  );
-                                                setTimeout(() => {
-                                                  toast.dismiss(successToast);
-                                                }, 2000);
-                                              }
                                             }
                                           );
                                         }}

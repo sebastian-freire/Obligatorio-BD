@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useMantenimientos from "../../hooks/UseMantenimientos";
 import "../../styles/sharedStyles.css";
+import toast from "react-hot-toast";
 
 export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
   const [mantenimiento, setMantenimiento] = useState({
@@ -116,7 +117,16 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
           />
           <div className="form-buttons">
             <button
-              onClick={() => {
+              onClick={async () => {
+                if (
+                  mantenimiento.fecha.trim() === "" ||
+                  mantenimiento.id_maquina.toString().trim() === "" ||
+                  mantenimiento.ci_tecnico.trim() === "" ||
+                  mantenimiento.tipo.trim() === ""
+                ) {
+                  toast.error("Por favor, complete todos los campos.");
+                  return;
+                }
                 // Convertir fecha de vuelta al formato esperado por el servidor
                 const fechaFormateada =
                   mantenimiento.fecha.replace("T", " ") + ":00";
@@ -124,8 +134,8 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
                   ...mantenimiento,
                   fecha: fechaFormateada
                 };
-                editarMantenimiento(mantenimientoId, mantenimientoParaEnviar);
-                if (onCancel) onCancel();
+                const response = await editarMantenimiento(mantenimientoId, mantenimientoParaEnviar);
+                if (response && onCancel) onCancel();
               }}
             >
               Editar Mantenimiento

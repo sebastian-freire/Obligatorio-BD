@@ -11,15 +11,9 @@ function ListaInsumos({ onAgregarClick, onEditarClick }) {
 
   const cargarInsumos = async () => {
     setLoading(true);
-    try {
-      const data = await fetchInsumos();
-      setInsumos(data);
-    } catch (error) {
-      console.error("Error cargando insumos:", error);
-      toast.error("Error al cargar la lista de insumos");
-    } finally {
-      setLoading(false);
-    }
+    const data = await fetchInsumos();
+    setInsumos(data);
+    setLoading(false);
   };
 
   // Cerrar dropdown al hacer click fuera
@@ -110,17 +104,8 @@ function ListaInsumos({ onAgregarClick, onEditarClick }) {
                                         onClick={() => {
                                           toast.remove(t.id);
                                           eliminarInsumo(insumo.id).then(
-                                            (data) => {
+                                            () => {
                                               cargarInsumos();
-                                              if (data) {
-                                                const successToast =
-                                                  toast.success(
-                                                    "Insumo eliminado correctamente"
-                                                  );
-                                                setTimeout(() => {
-                                                  toast.dismiss(successToast);
-                                                }, 2000);
-                                              }
                                             }
                                           );
                                         }}
