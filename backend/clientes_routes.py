@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from db import get_connection
+from db import get_user_connection
 
 clientes_bp = Blueprint('clientes', __name__)
 
@@ -7,7 +7,7 @@ clientes_bp = Blueprint('clientes', __name__)
 @clientes_bp.route("/clientes", methods=["GET"])
 def obtener_clientes():
     try:
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM clientes")
         clientes = cursor.fetchall()
@@ -24,7 +24,7 @@ def obtener_clientes():
 @clientes_bp.route("/clientes/<int:id>", methods=["GET"])
 def obtener_cliente(id):
     try:
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM clientes WHERE id = %s", (id,))
         cliente = cursor.fetchone()
@@ -46,7 +46,7 @@ def agregar_cliente():
     try:
         data = request.get_json()
         
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO clientes (nombre, telefono, correo, direccion) VALUES (%s, %s, %s, %s)",
@@ -68,7 +68,7 @@ def modificar_cliente(id):
     try:
         data = request.get_json()
         
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor()
         
         # Verificar que el cliente existe

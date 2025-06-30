@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from db import get_connection
+from db import get_admin_connection
 from auth import require_admin
 
 tecnicos_bp = Blueprint('tecnicos', __name__)
@@ -8,7 +8,7 @@ tecnicos_bp = Blueprint('tecnicos', __name__)
 @require_admin
 def obtener_tecnicos():
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM tecnicos")
         tecnicos = cursor.fetchall()
@@ -25,7 +25,7 @@ def obtener_tecnicos():
 @require_admin
 def obtener_tecnico(ci):
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM tecnicos WHERE ci = %s", (ci,))
         tecnico = cursor.fetchone()
@@ -46,7 +46,7 @@ def obtener_tecnico(ci):
 def crear_tecnico():
     try:
         data = request.get_json()
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor()
         
         cursor.execute(
@@ -68,7 +68,7 @@ def crear_tecnico():
 def modificar_tecnico(ci):
     try:
         data = request.get_json()
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor()
         
         # Verificar que el técnico existe
@@ -106,7 +106,7 @@ def modificar_tecnico(ci):
 @require_admin
 def eliminar_tecnico(ci):
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor()
         
         cursor.execute("DELETE FROM tecnicos WHERE ci = %s", (ci,))

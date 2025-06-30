@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, request
-from db import get_connection
+from db import get_user_connection
 
 mantenimientos_bp = Blueprint('mantenimientos', __name__)
 
 @mantenimientos_bp.route("/mantenimientos", methods=["GET"])
 def obtener_mantenimientos():
     try:
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM mantenimientos")
         mantenimientos = cursor.fetchall()
@@ -23,7 +23,7 @@ def obtener_mantenimientos():
 def crear_mantenimiento():
     try:
         data = request.get_json()
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor()
         
         # 1. Validar foreign keys
@@ -56,7 +56,7 @@ def crear_mantenimiento():
 def modificar_mantenimiento(id):
     try:
         data = request.get_json()
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor()
         
         # 1. Verificar que el mantenimiento existe
@@ -105,7 +105,7 @@ def modificar_mantenimiento(id):
 @mantenimientos_bp.route("/mantenimientos/<int:id>", methods=["DELETE"])
 def eliminar_mantenimiento(id):
     try:
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor()
         
         cursor.execute("DELETE FROM mantenimientos WHERE id = %s", (id,))
@@ -125,7 +125,7 @@ def eliminar_mantenimiento(id):
 @mantenimientos_bp.route("/mantenimientos/<int:id>", methods=["GET"])
 def obtener_mantenimiento(id):
     try:
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM mantenimientos WHERE id = %s", (id,))
         mantenimiento = cursor.fetchone()

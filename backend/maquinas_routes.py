@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from db import get_connection
+from db import get_admin_connection
 from auth import require_admin 
 
 maquinas_bp = Blueprint('maquinas', __name__)
@@ -8,7 +8,7 @@ maquinas_bp = Blueprint('maquinas', __name__)
 @require_admin
 def obtener_maquinas():
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM maquinas")
         maquinas = cursor.fetchall()
@@ -25,7 +25,7 @@ def obtener_maquinas():
 @require_admin
 def obtener_maquina(id):
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM maquinas WHERE id = %s", (id,))
         maquina = cursor.fetchone()
@@ -45,7 +45,7 @@ def obtener_maquina(id):
 @require_admin
 def obtener_maquinas_cliente(id):
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM maquinas WHERE id_cliente = %s", (id,))
         maquinas = cursor.fetchall()
@@ -63,7 +63,7 @@ def obtener_maquinas_cliente(id):
 def crear_maquina():
     try:
         data = request.get_json()
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor()
         
         # Validar foreign key
@@ -91,7 +91,7 @@ def crear_maquina():
 def modificar_maquina(id):
     try:
         data = request.get_json()
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor()
         
         # Verificar que la máquina existe
@@ -136,7 +136,7 @@ def modificar_maquina(id):
 @require_admin
 def eliminar_maquina(id):
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor()
         # Eliminar máquina
         cursor.execute("DELETE FROM maquinas WHERE id = %s", (id,))

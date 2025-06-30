@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from db import get_connection
+from db import get_admin_connection
 from auth import require_admin
 
 proveedores_bp = Blueprint('proveedores', __name__)
@@ -8,7 +8,7 @@ proveedores_bp = Blueprint('proveedores', __name__)
 @require_admin
 def obtener_proveedores():
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM proveedores")
         proveedores = cursor.fetchall()
@@ -25,7 +25,7 @@ def obtener_proveedores():
 @require_admin
 def obtener_proveedor(id):
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM proveedores WHERE id = %s", (id,))
         proveedor = cursor.fetchone()
@@ -46,7 +46,7 @@ def obtener_proveedor(id):
 def crear_proveedor():
     try:
         data = request.get_json()
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor()
         
         cursor.execute(
@@ -68,7 +68,7 @@ def crear_proveedor():
 def modificar_proveedor(id):
     try:
         data = request.get_json()
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor()
         
         # Verificar que el proveedor existe
@@ -106,7 +106,7 @@ def modificar_proveedor(id):
 @require_admin
 def eliminar_proveedor(id):
     try:
-        conn = get_connection()
+        conn = get_admin_connection()
         cursor = conn.cursor()
         
         cursor.execute("DELETE FROM proveedores WHERE id = %s", (id,))

@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, request
-from db import get_connection
+from db import get_user_connection
 
 insumos_bp = Blueprint('insumos', __name__)
 
 @insumos_bp.route("/insumos", methods=["GET"])
 def obtener_insumos():
     try:
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM insumos")
         insumos = cursor.fetchall()
@@ -24,7 +24,7 @@ def crear_insumo():
     try:
         data = request.get_json()
         
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor()
         
         # Validar foreign key
@@ -52,7 +52,7 @@ def modificar_insumo(id):
     try:
         data = request.get_json()
         
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor()
         
         # Verificar que el insumo existe
@@ -96,7 +96,7 @@ def modificar_insumo(id):
 @insumos_bp.route("/insumos/<int:id>", methods=["DELETE"])
 def eliminar_insumo(id):
     try:
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor()
         
         cursor.execute("DELETE FROM insumos WHERE id = %s", (id,))
@@ -116,7 +116,7 @@ def eliminar_insumo(id):
 @insumos_bp.route("/insumos/<int:id>", methods=["GET"])
 def obtener_insumo(id):
     try:
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM insumos WHERE id = %s", (id,))
         insumo = cursor.fetchone()
