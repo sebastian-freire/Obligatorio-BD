@@ -43,9 +43,22 @@ export default function EditarCliente({ clienteId, onCancel }) {
       toast.error("Por favor, complete todos los campos obligatorios.");
       return;
     }
+    const simbolosNumericos = [".", "-", "(", ")", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    const arrayTelefono = cliente.telefono.split("")
+    if (
+      !arrayTelefono.every((char) => simbolosNumericos.includes(char))
+      && !(arrayTelefono.slice(1).every((char) => simbolosNumericos.includes(char) && arrayTelefono[0] === "+"))
+    ) {
+      toast.error("El teléfono debe solo contener números y símbolos permitidos");
+      return;
+    }
+    if (!cliente.correo.includes("@")) {
+      toast.error("El correo electrónico debe contener un '@'.");
+      return;
+    }
 
     const resultado = await editarCliente(clienteId, cliente);
-    if (resultado && onCancel)  onCancel();
+    if (resultado && onCancel) onCancel();
   };
 
   return (
