@@ -1,12 +1,16 @@
 import { handleApiResponse, handleApiError } from "../utils/apiUtils";
+import { useUser } from "../context/UserContext";
 
 export default function useClientes() {
   const apiUrl = import.meta.env.VITE_API_ENDPOINT;
+  const { getAuthHeaders } = useUser();
 
   const fetchCliente = async (id) => {
     try {
       const url = `${apiUrl}/clientes/${id}`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       return await handleApiResponse(res);
     } catch (err) {
       await handleApiError(err);
@@ -17,7 +21,9 @@ export default function useClientes() {
   const fetchClientes = async () => {
     try {
       const url = `${apiUrl}/clientes`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       return await handleApiResponse(res);
     } catch (err) {
       await handleApiError(err);
@@ -29,9 +35,7 @@ export default function useClientes() {
     try {
       const res = await fetch(`${apiUrl}/clientes`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           nombre: cliente.nombre,
           telefono: cliente.telefono,
@@ -51,9 +55,7 @@ export default function useClientes() {
     try {
       const res = await fetch(`${apiUrl}/clientes/${id}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           nombre: cliente.nombre,
           telefono: cliente.telefono,
@@ -73,9 +75,7 @@ export default function useClientes() {
     try {
       const res = await fetch(`${apiUrl}/clientes/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        }
+        headers: getAuthHeaders()
       });
       await handleApiResponse(res);
       return true;

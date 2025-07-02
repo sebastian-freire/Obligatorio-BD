@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
 from db import get_user_connection
+from auth import require_login, require_admin
 
 consultas_reportes_bp = Blueprint('consultas_reportes', __name__)
 
 @consultas_reportes_bp.route("/cobro_mensual_cliente", methods=["GET"])
+@require_login
 def cobro_mensual_cliente():
     try:
         conn = get_user_connection()
@@ -32,6 +34,7 @@ def cobro_mensual_cliente():
             conn.close()
     
 @consultas_reportes_bp.route("/insumos_costo_total", methods=["GET"])
+@require_login
 def insumos_costo_total():
     try:
         conn = get_user_connection()
@@ -55,6 +58,7 @@ def insumos_costo_total():
             conn.close()
     
 @consultas_reportes_bp.route("/insumos_cantidad_total", methods=["GET"])
+@require_login
 def insumos_cantidad_total():
     try:
         conn = get_user_connection()
@@ -78,6 +82,7 @@ def insumos_cantidad_total():
             conn.close()
 
 @consultas_reportes_bp.route("/tecnicos_mas_mantenimientos", methods=["GET"])
+@require_admin
 def tecnicos_mas_mantenimientos():
     try:
         conn = get_user_connection()
@@ -100,6 +105,7 @@ def tecnicos_mas_mantenimientos():
             conn.close()
     
 @consultas_reportes_bp.route("/clientes_mas_maquinas", methods=["GET"])
+@require_login
 def clientes_mas_maquinas():
     try:
         conn = get_user_connection()

@@ -23,6 +23,9 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
     }));
   };
 
+  //Esto es para mejorar de forma visual como se ve la fecha en el input
+  // Si no estuviera funciona igualmente, pero se vería la fecha en formato GMT
+  // como "Sat, 28 Jun 2025 05:01:00 GMT
   useEffect(() => {
     if (mantenimientoId) {
       setLoading(true);
@@ -34,12 +37,9 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
             let fechaFormatted = "";
             if (data.fecha) {
               try {
-                // La fecha viene en formato GMT como "Sat, 28 Jun 2025 05:01:00 GMT"
-                // Necesitamos convertirla a formato local YYYY-MM-DDTHH:MM
                 const fechaObj = new Date(data.fecha);
 
                 if (!isNaN(fechaObj.getTime())) {
-                  // Formatear para datetime-local input (formato local)
                   const year = fechaObj.getFullYear();
                   const month = String(fechaObj.getMonth() + 1).padStart(
                     2,
@@ -71,7 +71,7 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
           if (onCancel) onCancel();
         });
     }
-  }, [mantenimientoId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [mantenimientoId]);
 
   return (
     <div className="agregar-cliente-container">
@@ -122,7 +122,8 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
                   mantenimiento.fecha.trim() === "" ||
                   mantenimiento.id_maquina.toString().trim() === "" ||
                   mantenimiento.ci_tecnico.trim() === "" ||
-                  mantenimiento.tipo.trim() === ""
+                  mantenimiento.tipo.trim() === "" ||
+                  mantenimiento.observaciones.trim() === ""
                 ) {
                   toast.error("Por favor, complete todos los campos.");
                   return;
@@ -134,7 +135,10 @@ export default function EditarMantenimiento({ mantenimientoId, onCancel }) {
                   ...mantenimiento,
                   fecha: fechaFormateada
                 };
-                const response = await editarMantenimiento(mantenimientoId, mantenimientoParaEnviar);
+                const response = await editarMantenimiento(
+                  mantenimientoId,
+                  mantenimientoParaEnviar
+                );
                 if (response && onCancel) onCancel();
               }}
             >

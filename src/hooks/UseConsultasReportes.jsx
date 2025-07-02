@@ -1,13 +1,17 @@
 import { handleApiResponse, handleApiError } from "../utils/apiUtils";
+import { useUser } from "../context/UserContext";
 
 export default function useConsultasReportes() {
   const apiUrl = import.meta.env.VITE_API_ENDPOINT;
+  const { getAuthHeaders } = useUser();
 
   // Obtener cobro mensual por cliente (suma de insumos y alquiler del mes actual)
   const fetchCobroMensualCliente = async () => {
     try {
       const url = `${apiUrl}/cobro_mensual_cliente`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       return await handleApiResponse(res);
     } catch (err) {
       handleApiError(err);
@@ -19,7 +23,9 @@ export default function useConsultasReportes() {
   const fetchInsumosCostoTotal = async () => {
     try {
       const url = `${apiUrl}/insumos_costo_total`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       return await handleApiResponse(res);
     } catch (err) {
       handleApiError(err);
@@ -31,7 +37,9 @@ export default function useConsultasReportes() {
   const fetchInsumosCantidadTotal = async () => {
     try {
       const url = `${apiUrl}/insumos_cantidad_total`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       return await handleApiResponse(res);
     } catch (err) {
       handleApiError(err);
@@ -43,7 +51,9 @@ export default function useConsultasReportes() {
   const fetchTecnicosMasMantenimientos = async () => {
     try {
       const url = `${apiUrl}/tecnicos_mas_mantenimientos`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       return await handleApiResponse(res);
     } catch (err) {
       handleApiError(err);
@@ -55,7 +65,9 @@ export default function useConsultasReportes() {
   const fetchClientesMasMaquinas = async () => {
     try {
       const url = `${apiUrl}/clientes_mas_maquinas`;
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getAuthHeaders()
+      });
       return await handleApiResponse(res);
     } catch (err) {
       handleApiError(err);

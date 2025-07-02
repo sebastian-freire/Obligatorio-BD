@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
 from db import get_user_connection
+from auth import require_login
 
 clientes_bp = Blueprint('clientes', __name__)
 
 # Traer todos los clientes
 @clientes_bp.route("/clientes", methods=["GET"])
+@require_login
 def obtener_clientes():
     try:
         conn = get_user_connection()
@@ -22,6 +24,7 @@ def obtener_clientes():
 
 # Traer un cliente específico
 @clientes_bp.route("/clientes/<int:id>", methods=["GET"])
+@require_login
 def obtener_cliente(id):
     try:
         conn = get_user_connection()
@@ -42,6 +45,7 @@ def obtener_cliente(id):
 
 # Crear un nuevo cliente
 @clientes_bp.route("/clientes", methods=["POST"])
+@require_login
 def agregar_cliente():
     try:
         data = request.get_json()
@@ -64,6 +68,7 @@ def agregar_cliente():
 
 # Modificar un cliente existente
 @clientes_bp.route("/clientes/<int:id>", methods=["PATCH"])
+@require_login
 def modificar_cliente(id):
     try:
         data = request.get_json()
@@ -105,9 +110,10 @@ def modificar_cliente(id):
 
 # Eliminar un cliente
 @clientes_bp.route("/clientes/<int:id>", methods=["DELETE"])
+@require_login
 def eliminar_cliente(id):
     try:
-        conn = get_connection()
+        conn = get_user_connection()
         cursor = conn.cursor()
         
         cursor.execute("DELETE FROM clientes WHERE id = %s", (id,))

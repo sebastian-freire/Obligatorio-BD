@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
 from db import get_user_connection
+from auth import require_login
 
 mantenimientos_bp = Blueprint('mantenimientos', __name__)
 
 @mantenimientos_bp.route("/mantenimientos", methods=["GET"])
+@require_login
 def obtener_mantenimientos():
     try:
         conn = get_user_connection()
@@ -20,6 +22,7 @@ def obtener_mantenimientos():
             conn.close()
 
 @mantenimientos_bp.route("/mantenimientos", methods=["POST"])
+@require_login
 def crear_mantenimiento():
     try:
         data = request.get_json()
@@ -53,6 +56,7 @@ def crear_mantenimiento():
             conn.close()
 
 @mantenimientos_bp.route("/mantenimientos/<int:id>", methods=["PATCH"])
+@require_login
 def modificar_mantenimiento(id):
     try:
         data = request.get_json()
@@ -103,6 +107,7 @@ def modificar_mantenimiento(id):
             conn.close()
 
 @mantenimientos_bp.route("/mantenimientos/<int:id>", methods=["DELETE"])
+@require_login
 def eliminar_mantenimiento(id):
     try:
         conn = get_user_connection()
@@ -123,6 +128,7 @@ def eliminar_mantenimiento(id):
             conn.close()
 
 @mantenimientos_bp.route("/mantenimientos/<int:id>", methods=["GET"])
+@require_login
 def obtener_mantenimiento(id):
     try:
         conn = get_user_connection()

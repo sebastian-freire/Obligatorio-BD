@@ -71,7 +71,8 @@ export default function AgregarMantenimientos({ onCancel }) {
               mantenimiento.fecha.trim() === "" ||
               mantenimiento.id_maquina.trim() === "" ||
               mantenimiento.ci_tecnico.trim() === "" ||
-              mantenimiento.tipo.trim() === "" 
+              mantenimiento.tipo.trim() === "" ||
+              mantenimiento.observaciones.trim() === ""
             ) {
               toast.error("Por favor, complete todos los campos.");
               return;

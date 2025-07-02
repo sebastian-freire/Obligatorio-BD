@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
 from db import get_user_connection
+from auth import require_login
 
 insumos_bp = Blueprint('insumos', __name__)
 
 @insumos_bp.route("/insumos", methods=["GET"])
+@require_login
 def obtener_insumos():
     try:
         conn = get_user_connection()
@@ -20,6 +22,7 @@ def obtener_insumos():
             conn.close()
 
 @insumos_bp.route("/insumos", methods=["POST"])
+@require_login
 def crear_insumo():
     try:
         data = request.get_json()
@@ -48,6 +51,7 @@ def crear_insumo():
             conn.close()
 
 @insumos_bp.route("/insumos/<int:id>", methods=["PATCH"])
+@require_login
 def modificar_insumo(id):
     try:
         data = request.get_json()
@@ -94,6 +98,7 @@ def modificar_insumo(id):
             conn.close()
 
 @insumos_bp.route("/insumos/<int:id>", methods=["DELETE"])
+@require_login
 def eliminar_insumo(id):
     try:
         conn = get_user_connection()
@@ -114,6 +119,7 @@ def eliminar_insumo(id):
             conn.close()
 
 @insumos_bp.route("/insumos/<int:id>", methods=["GET"])
+@require_login
 def obtener_insumo(id):
     try:
         conn = get_user_connection()
