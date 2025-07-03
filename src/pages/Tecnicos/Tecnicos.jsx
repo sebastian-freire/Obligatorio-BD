@@ -3,6 +3,7 @@ import MenuButton from "../../components/MenuButton";
 import ListaTecnicos from "./ListaTecnicos";
 import AgregarTecnico from "./AgregarTecnico";
 import EditarTecnico from "./EditarTecnico";
+import ListaTecnicosMantenimientos from "./ListaTecnicosMantenimientos";
 import "../../styles/sharedStyles.css";
 import "../../styles/panelStyles.css";
 
@@ -34,6 +35,8 @@ function Tecnicos() {
             }}
           />
         );
+      case "mantenimientos":
+        return <ListaTecnicosMantenimientos />;
       default:
         return (
           <ListaTecnicos
@@ -65,6 +68,14 @@ function Tecnicos() {
             }`}
           >
             Lista de Técnicos
+          </button>
+          <button
+            onClick={() => setPestañaActiva("mantenimientos")}
+            className={`tab-button ${
+              pestañaActiva === "mantenimientos" ? "active" : ""
+            }`}
+          >
+            Técnicos más mantenimientos
           </button>
         </div>
       </div>
