@@ -71,6 +71,11 @@ def crear_maquina():
             cursor.execute("SELECT id FROM clientes WHERE id = %s", (data['id_cliente'],))
             if not cursor.fetchone():
                 return jsonify({"error": "El cliente con ID {} no existe".format(data['id_cliente'])}), 400
+
+        if ('id_cliente' in data and 'ubicacion_maquina' in data):
+            cursor.execute("SELECT id_cliente, ubicacion_maquina FROM maquinas WHERE id_cliente = %s AND ubicacion_maquina = %s", (data['id_cliente'], data['ubicacion_maquina']))
+            if cursor.fetchone():
+                return jsonify({"error": "En esa ubicación ya se encuentra una maquina"}), 400
         
         cursor.execute(
             "INSERT INTO maquinas (modelo, id_cliente, ubicacion_maquina, costo_alquiler_mensual) VALUES (%s, %s, %s, %s)",
@@ -79,6 +84,33 @@ def crear_maquina():
         conn.commit()
         
         return jsonify({"message": "Máquina creada exitosamente"}), 201
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
+            
+@maquinas_bp.route("/registro_consumo", methods=["POST"])
+@require_admin
+def registrar_consumo():
+    try:
+        data = request.get_json()
+        conn = get_admin_connection()
+        cursor = conn.cursor()
+        
+        # Validar foreign key
+        if 'id_insumo' in data:
+            cursor.execute("SELECT id FROM insumos WHERE id = %s", (data['id_insumo'],))
+            if not cursor.fetchone():
+                return jsonify({"error": "El insumo con ID {} no existe".format(data['id_insumo'])}), 400
+        cursor.execute(
+            "INSERT INTO registro_consumo (id_maquina, id_insumo, fecha, cantidad_usada) VALUES (%s, %s, %s, %s)",
+            (data.get("id_maquina"), data.get("id_insumo"), data.get("fecha"), data.get("cantidad_usada"))
+        )
+        conn.commit()
+        
+        return jsonify({"message": "Consumo registrado exitosamente"}), 201
         
     except Exception as e:
         return jsonify({"error": str(e)}), 500

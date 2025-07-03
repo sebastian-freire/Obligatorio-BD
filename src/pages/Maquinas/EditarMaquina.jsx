@@ -46,9 +46,7 @@ export default function EditarMaquina({ maquinaId, onCancel }) {
     }
 
     const resultado = await editarMaquina(maquinaId, maquina);
-    if (resultado) {
-      if (onCancel) onCancel();
-    }
+    if (resultado && onCancel) onCancel();
   };
 
   return (

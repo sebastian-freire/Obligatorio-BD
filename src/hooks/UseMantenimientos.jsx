@@ -9,7 +9,7 @@ export default function useMantenimientos() {
     try {
       const url = `${apiUrl}/mantenimientos/${id}`;
       const res = await fetch(url, {
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
       });
       const data = await res.json();
       return data;
@@ -23,7 +23,7 @@ export default function useMantenimientos() {
     try {
       const url = `${apiUrl}/mantenimientos`;
       const res = await fetch(url, {
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
       });
       const data = await res.json();
       return data;
@@ -47,8 +47,8 @@ export default function useMantenimientos() {
           ci_tecnico: nuevoMantenimiento.ci_tecnico,
           tipo: nuevoMantenimiento.tipo,
           fecha: fechaAjustada,
-          observaciones: nuevoMantenimiento.observaciones
-        })
+          observaciones: nuevoMantenimiento.observaciones,
+        }),
       });
 
       await handleApiResponse(res);
@@ -72,8 +72,8 @@ export default function useMantenimientos() {
           ci_tecnico: mantenimiento.ci_tecnico,
           tipo: mantenimiento.tipo,
           fecha: fechaAjustada,
-          observaciones: mantenimiento.observaciones
-        })
+          observaciones: mantenimiento.observaciones,
+        }),
       });
 
       await handleApiResponse(res);
@@ -88,7 +88,7 @@ export default function useMantenimientos() {
     try {
       const res = await fetch(`${apiUrl}/mantenimientos/${id}`, {
         method: "DELETE",
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
       });
 
       await handleApiResponse(res);
@@ -103,6 +103,6 @@ export default function useMantenimientos() {
     fetchMantenimientos,
     editarMantenimiento,
     eliminarMantenimiento,
-    agregarMantenimiento
+    agregarMantenimiento,
   };
 }

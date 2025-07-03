@@ -5,10 +5,12 @@ import AgregarMaquina from "./AgregarMaquina";
 import EditarMaquina from "./EditarMaquina";
 import "../../styles/sharedStyles.css";
 import "../../styles/panelStyles.css";
+import AgregarConsumo from "./AgregarConsumo";
 
 function Maquinas() {
   const [pestañaActiva, setPestañaActiva] = useState("lista");
   const [maquinaIdEditar, setMaquinaIdEditar] = useState(null);
+  const [maquinaIdConsumo, setMaquinaIdConsumo] = useState(null);
 
   const renderContenido = () => {
     switch (pestañaActiva) {
@@ -19,6 +21,10 @@ function Maquinas() {
             onEditarClick={(maquinaId) => {
               setMaquinaIdEditar(maquinaId);
               setPestañaActiva("editar");
+            }}
+            onConsumoClick={(maquinaId) => {
+              setMaquinaIdConsumo(maquinaId);
+              setPestañaActiva("consumo");
             }}
           />
         );
@@ -34,6 +40,15 @@ function Maquinas() {
             }}
           />
         );
+      case "consumo":
+        return (
+          <AgregarConsumo
+            maquinaId={maquinaIdConsumo}
+            onCancel={() => {
+              setPestañaActiva("lista");
+            }}
+          />
+        );
       default:
         return (
           <ListaMaquinas
@@ -41,6 +56,10 @@ function Maquinas() {
             onEditarClick={(maquinaId) => {
               setMaquinaIdEditar(maquinaId);
               setPestañaActiva("editar");
+            }}
+            onConsumoClick={(maquinaId) => {
+              setMaquinaIdConsumo(maquinaId);
+              setPestañaActiva("consumo");
             }}
           />
         );

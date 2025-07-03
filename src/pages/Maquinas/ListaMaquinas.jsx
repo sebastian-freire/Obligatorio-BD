@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import useMaquinas from "../../hooks/UseMaquinas";
 import "../../styles/sharedStyles.css";
 
-function ListaMaquinas({ onAgregarClick, onEditarClick }) {
+function ListaMaquinas({ onAgregarClick, onEditarClick, onConsumoClick }) {
   const [maquinas, setMaquinas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(null);
@@ -140,6 +140,15 @@ function ListaMaquinas({ onAgregarClick, onEditarClick }) {
                           }}
                         >
                           Eliminar
+                        </button>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => {
+                            setOpen(null);
+                            if (onConsumoClick) onConsumoClick(maquina.id);
+                          }}
+                        >
+                          Registrar Consumo
                         </button>
                       </div>
                     )}

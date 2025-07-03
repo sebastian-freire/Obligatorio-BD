@@ -57,7 +57,7 @@ export default function AgregarMaquina({ onCancel }) {
       />
       <div className="form-buttons">
         <button
-          onClick={ async () => {
+          onClick={async () => {
             console.log(nuevaMaquina.costo_alquiler_mensual);
             if (
               nuevaMaquina.modelo.trim() === "" ||

@@ -9,7 +9,7 @@ export default function useMaquinas() {
     try {
       const url = `${apiUrl}/maquinas/cliente/${id_cliente}`;
       const res = await fetch(url, {
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
       });
       return await handleApiResponse(res);
     } catch (err) {
@@ -22,7 +22,7 @@ export default function useMaquinas() {
     try {
       const url = `${apiUrl}/maquinas/${id}`;
       const res = await fetch(url, {
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
       });
       return await handleApiResponse(res);
     } catch (err) {
@@ -35,7 +35,7 @@ export default function useMaquinas() {
     try {
       const url = `${apiUrl}/maquinas`;
       const res = await fetch(url, {
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
       });
       return await handleApiResponse(res);
     } catch (err) {
@@ -48,7 +48,7 @@ export default function useMaquinas() {
     try {
       const res = await fetch(`${apiUrl}/maquinas/${id}`, {
         method: "DELETE",
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
       });
       await handleApiResponse(res);
       return true;
@@ -67,8 +67,8 @@ export default function useMaquinas() {
           modelo: maquina.modelo,
           id_cliente: maquina.id_cliente,
           ubicacion_maquina: maquina.ubicacion_maquina,
-          costo_alquiler_mensual: maquina.costo_alquiler_mensual
-        })
+          costo_alquiler_mensual: maquina.costo_alquiler_mensual,
+        }),
       });
       await handleApiResponse(res);
       return true;
@@ -87,8 +87,33 @@ export default function useMaquinas() {
           modelo: maquina.modelo,
           id_cliente: maquina.id_cliente,
           ubicacion_maquina: maquina.ubicacion_maquina,
-          costo_alquiler_mensual: maquina.costo_alquiler_mensual
-        })
+          costo_alquiler_mensual: maquina.costo_alquiler_mensual,
+        }),
+      });
+      await handleApiResponse(res);
+      return true;
+    } catch (err) {
+      await handleApiError(err);
+      return false;
+    }
+  };
+
+  const registrarConsumo = async (consumo) => {
+    console.log(consumo.id_maquina);
+    console.log(consumo.id_insumo);
+    console.log(consumo.fecha);
+    console.log(consumo.cantidad_usada);
+
+    try {
+      const res = await fetch(`${apiUrl}/registro_consumo`, {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          id_maquina: consumo.id_maquina,
+          id_insumo: consumo.id_insumo,
+          fecha: consumo.fecha,
+          cantidad_usada: consumo.cantidad_usada,
+        }),
       });
       await handleApiResponse(res);
       return true;
@@ -104,6 +129,7 @@ export default function useMaquinas() {
     eliminarMaquina,
     editarMaquina,
     fetchMaquinaById,
-    agregarMaquina
+    agregarMaquina,
+    registrarConsumo,
   };
 }
